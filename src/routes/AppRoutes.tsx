@@ -39,7 +39,8 @@ const AppRoutes: React.FC = () => {
                             </PrivateRoute>
                         }
                     >
-                        <Route  index element={<MovieCard />} /> {/* Default route to show MovieCard */}
+                        {/* Default route to show MovieCard */}
+                        {/* <Route  index element={<MovieCard />} />  */}
                         <Route path="movie/:id" element={<Header />} />
                     </Route>
                     <Route path="/login" element={<LogIn setIsAuthenticated={setIsAuthenticated} />} />
