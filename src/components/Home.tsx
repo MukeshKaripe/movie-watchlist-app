@@ -5,9 +5,11 @@ import { searchMovies, Movie } from '../services/api';
 import MovieCard from './MovieCard';
 import SideBar from './SideBar';
 import { makeStyles } from '@mui/styles';
-import { RootState } from '../redux/store/index';
-import { setMovies, setLoading } from '../redux/store/movieSlice';
-import { addToWatchlist, removeFromWatchlist } from '../redux/store/watchList';
+import { RootState } from '../../src/redux/store/index';
+import { setMovies, setLoading } from '../../src/redux/store/movieSlice';
+import { addToWatchlist, removeFromWatchlist } from '../../src/redux/store/watchList';
+import SearchIcon from '@mui/icons-material/Search';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const useStyles = makeStyles({
   container: {
@@ -32,7 +34,7 @@ const Home: React.FC = () => {
   const dispatch = useDispatch();
   const movies = useSelector((state: RootState) => state.movies.movies);
   const loading = useSelector((state: RootState) => state.movies.loading);
-  const watchlist = useSelector((state: RootState) => state.watchlist.items);
+  const watchlist = useSelector((state: RootState) => state.watchlist.lists);
 
   const handleSearch = async () => {
     if (query.trim()) {
@@ -51,13 +53,23 @@ const Home: React.FC = () => {
     }
   };
 
+  // const handleAddToWatchlist = (movie: Movie) => {
+  //   dispatch(addToWatchlist(movie));
+  // };
   const handleAddToWatchlist = (movie: Movie) => {
-    dispatch(addToWatchlist(movie));
+    const listId = "default-list-id"; // or get this dynamically if necessary
+    dispatch(addToWatchlist({ listId, movie }));
   };
+  
 
+  // const handleRemoveFromWatchlist = (movieId: string) => {
+  //   dispatch(removeFromWatchlist(movieId));
+  // };
   const handleRemoveFromWatchlist = (movieId: string) => {
-    dispatch(removeFromWatchlist(movieId));
+    const listId = "default-list-id"; // or get this dynamically if necessary
+    dispatch(removeFromWatchlist({ listId, movieId }));
   };
+  
 
   return (
     <div className={classes.container}>
@@ -66,6 +78,8 @@ const Home: React.FC = () => {
       </div>
       <div className={classes.containerwrapper}>
         <h1>Movie Search</h1>
+       <div>
+       <SearchIcon/>
         <input
           type="text"
           value={query}
@@ -73,16 +87,19 @@ const Home: React.FC = () => {
           placeholder="Search for movies..."
         />
         <button onClick={handleSearch}>Search</button>
+       </div>
         {loading ? (
           <p>Loading...</p>
         ) : (
           <div className="movie-list">
             {movies.length > 0 ? (
-              movies.map((movie) => (
+              movies.map((movie:any) => (
                 <MovieCard 
                   key={movie.imdbID} 
                   movie={movie}
-                  isInWatchlist={watchlist.some(item => item.imdbID === movie.imdbID)}
+                  isInWatchlist={watchlist.some(list => 
+                    list.movies.some(movieItem => movieItem.imdbID === movie.imdbID)
+                  )}
                   onAddToWatchlist={() => handleAddToWatchlist(movie)}
                   onRemoveFromWatchlist={() => handleRemoveFromWatchlist(movie.imdbID)}
                 />

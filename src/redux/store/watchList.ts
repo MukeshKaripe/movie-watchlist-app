@@ -1,28 +1,42 @@
+// src/store/watchlistSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Movie } from '../../services/api';
 
+interface Watchlist {
+  id: string;
+  name: string;
+  movies: Movie[];
+}
+
 interface WatchlistState {
-  items: Movie[];
+  lists: Watchlist[];
 }
 
 const initialState: WatchlistState = {
-  items: [],
+  lists: [],
 };
 
 const watchlistSlice = createSlice({
   name: 'watchlist',
   initialState,
   reducers: {
-    addToWatchlist: (state, action: PayloadAction<Movie>) => {
-      if (!state.items.some(movie => movie.imdbID === action.payload.imdbID)) {
-        state.items.push(action.payload);
+    createWatchlist: (state, action: PayloadAction<{ id: string; name: string }>) => {
+      state.lists.push({ id: action.payload.id, name: action.payload.name, movies: [] });
+    },
+    addToWatchlist: (state, action: PayloadAction<{ listId: string; movie: Movie }>) => {
+      const list = state.lists.find(l => l.id === action.payload.listId);
+      if (list && !list.movies.some(m => m.imdbID === action.payload.movie.imdbID)) {
+        list.movies.push(action.payload.movie);
       }
     },
-    removeFromWatchlist: (state, action: PayloadAction<string>) => {
-      state.items = state.items.filter(movie => movie.imdbID !== action.payload);
+    removeFromWatchlist: (state, action: PayloadAction<{ listId: string; movieId: string }>) => {
+      const list = state.lists.find(l => l.id === action.payload.listId);
+      if (list) {
+        list.movies = list.movies.filter(movie => movie.imdbID !== action.payload.movieId);
+      }
     },
   },
 });
 
-export const { addToWatchlist, removeFromWatchlist } = watchlistSlice.actions;
+export const { createWatchlist, addToWatchlist, removeFromWatchlist } = watchlistSlice.actions;
 export default watchlistSlice.reducer;
