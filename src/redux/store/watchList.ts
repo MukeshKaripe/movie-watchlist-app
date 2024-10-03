@@ -21,7 +21,11 @@ const watchlistSlice = createSlice({
   initialState,
   reducers: {
     createWatchlist: (state, action: PayloadAction<{ id: string; name: string }>) => {
-      state.lists.push({ id: action.payload.id, name: action.payload.name, movies: [] });
+      // state.lists.push({ id: action.payload.id, name: action.payload.name, movies: [] });
+      const isDuplicate = state.lists.some(list => list.name === action.payload.name);
+      if (!isDuplicate) {
+        state.lists.push({ id: action.payload.id, name: action.payload.name, movies: [] });
+      }
     },
     addToWatchlist: (state, action: PayloadAction<{ listId: string; movie: Movie }>) => {
       const list = state.lists.find(l => l.id === action.payload.listId);

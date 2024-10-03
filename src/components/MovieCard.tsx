@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../src/redux/store/index';
 import { createWatchlist, addToWatchlist } from '../../src/redux/store/watchList';
+import { bgColors } from '../utils/colorTheme';
 import {
   Box,
   Button,
@@ -26,9 +27,9 @@ interface Movie {
 
 interface MovieCardProps {
   movie: Movie;
-  isInWatchlist: boolean; 
-  onAddToWatchlist: () => void; 
-  onRemoveFromWatchlist: () => void; 
+  isInWatchlist: boolean;
+  onAddToWatchlist: () => void;
+  onRemoveFromWatchlist: () => void;
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
@@ -103,14 +104,30 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
             onChange={(e) => setNewListName(e.target.value)}
           />
           <Button onClick={handleCreateList}>Create & Add</Button>
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Existing Watchlists</InputLabel>
+          <FormControl fullWidth margin="normal" size="small">
+            <InputLabel
+              id="watchlist-label"
+              sx={{
+                background:bgColors.white,
+                padding:'0px 4px'
+              }}
+            >
+              Existing Watchlists
+            </InputLabel>
             <Select
+              labelId="watchlist-label"
               value={selectedList}
               onChange={(e) => setSelectedList(e.target.value)}
             >
               {watchlists.map((list) => (
-                <MenuItem key={list.id} value={list.id}>
+                <MenuItem
+                  key={list.id}
+                  value={list.id}
+                  sx={{
+                    fontSize: 14,
+                    fontWeight: selectedList === list.id ? "normal" : "normal",
+                  }}
+                >
                   {list.name}
                 </MenuItem>
               ))}

@@ -10,6 +10,15 @@ import { setMovies, setLoading } from '../../src/redux/store/movieSlice';
 import { addToWatchlist, removeFromWatchlist } from '../../src/redux/store/watchList';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
+import LoadingComponent from '../common/Loader';
+import { bgColors } from '../utils/colorTheme';
+import { Box } from '@mui/material';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import WatchlistView from './WatchListView';
+import MovieSearch from './MovieSearch';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+const theme = createTheme();
 
 const useStyles = makeStyles({
   container: {
@@ -26,15 +35,22 @@ const useStyles = makeStyles({
     marginLeft: '200px',
     width: 'calc( 100% - 200px)',
   },
+  content: {
+    marginLeft: '200px',
+    width: 'calc(100% - 200px)',
+    padding: '20px',
+  },
 });
 
 const Home: React.FC = () => {
-  const [query, setQuery] = useState('');
   const classes = useStyles();
+  const location = useLocation();
   const dispatch = useDispatch();
   const movies = useSelector((state: RootState) => state.movies.movies);
   const loading = useSelector((state: RootState) => state.movies.loading);
-  const watchlist = useSelector((state: RootState) => state.watchlist.lists);
+  const watchlists = useSelector((state: RootState) => state.watchlist.lists);
+
+  const [query, setQuery] = useState('');
 
   const handleSearch = async () => {
     if (query.trim()) {
@@ -42,76 +58,45 @@ const Home: React.FC = () => {
         dispatch(setLoading(true));
         const results = await searchMovies(query);
         dispatch(setMovies(results));
-        console.log('Search Results:', results);
       } catch (error) {
         console.error('Error fetching movies:', error);
       } finally {
         dispatch(setLoading(false));
       }
-    } else {
-      console.warn('Search query is empty');
     }
   };
 
-  // const handleAddToWatchlist = (movie: Movie) => {
-  //   dispatch(addToWatchlist(movie));
-  // };
-  const handleAddToWatchlist = (movie: Movie) => {
-    const listId = "default-list-id"; // or get this dynamically if necessary
-    dispatch(addToWatchlist({ listId, movie }));
+  const renderContent = () => {
+    if (location.pathname === '/') {
+      return (
+        <MovieSearch
+          query={query}
+          setQuery={setQuery}
+          handleSearch={handleSearch}
+          loading={loading}
+          movies={movies}
+        />
+      );
+    }
+    return null;
   };
-  
-
-  // const handleRemoveFromWatchlist = (movieId: string) => {
-  //   dispatch(removeFromWatchlist(movieId));
-  // };
-  const handleRemoveFromWatchlist = (movieId: string) => {
-    const listId = "default-list-id"; // or get this dynamically if necessary
-    dispatch(removeFromWatchlist({ listId, movieId }));
-  };
-  
 
   return (
-    <div className={classes.container}>
-      <div className={classes.sidebar}>
-        <SideBar />
-      </div>
-      <div className={classes.containerwrapper}>
-        <h1>Movie Search</h1>
-       <div>
-       <SearchIcon/>
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search for movies..."
-        />
-        <button onClick={handleSearch}>Search</button>
-       </div>
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          <div className="movie-list">
-            {movies.length > 0 ? (
-              movies.map((movie:any) => (
-                <MovieCard 
-                  key={movie.imdbID} 
-                  movie={movie}
-                  isInWatchlist={watchlist.some(list => 
-                    list.movies.some(movieItem => movieItem.imdbID === movie.imdbID)
-                  )}
-                  onAddToWatchlist={() => handleAddToWatchlist(movie)}
-                  onRemoveFromWatchlist={() => handleRemoveFromWatchlist(movie.imdbID)}
-                />
-              ))
-            ) : (
-              <p>No movies found.</p>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
+    <Box className={classes.container}>
+      <Box className={classes.sidebar}>
+        <ThemeProvider theme={theme}>
+          <SideBar />
+        </ThemeProvider>
+      </Box>
+      <Box className={classes.content}>
+        <Routes>
+          <Route path="/" element={renderContent()} />
+          <Route path="/watchlist/:listId" element={<WatchlistView />} />
+        </Routes>
+      </Box>
+    </Box>
   );
 };
+
 
 export default Home;
