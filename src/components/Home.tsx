@@ -26,19 +26,19 @@ const useStyles = makeStyles({
     display: 'flex',
   },
   sidebar: {
-    width: '200px',
+    width: '250px',
     height: '100vh',
-    position: 'absolute',
+    position: 'fixed',
     left: '0',
   },
   containerwrapper: {
-    marginLeft: '200px',
-    width: 'calc( 100% - 200px)',
+    marginLeft: '250px',
+    width: 'calc( 100% - 250px)',
   },
   content: {
-    marginLeft: '200px',
-    width: 'calc(100% - 200px)',
-    padding: '20px',
+    marginLeft: '250px',
+    width: 'calc(100% - 250px)',
+    padding: '40px',
   },
 });
 

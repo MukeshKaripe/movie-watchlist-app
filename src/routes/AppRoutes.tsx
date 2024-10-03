@@ -6,7 +6,6 @@ import Home from '../components/Home';
 import Signup from '../pages/SignUp';
 import LogIn from '../pages/Login';
 import MovieCard from '../components/MovieCard';
-import Header from '../components/Header';
 import WatchlistView from '../components/WatchListView';
 import Login from '../pages/Login';
 
@@ -30,23 +29,6 @@ const AppRoutes: React.FC = () => {
     };
 
     return (
-        // <Router>
-        //     <div className="App">
-        //         <Routes>
-        //             <Route path="/" element={
-        //                 <PrivateRoute isAuthenticated={isAuthenticated}>
-        //                     <Home />
-        //                 </PrivateRoute>
-        //             }>
-        //                 <Route path="movie/:id" element={<Header />} />
-        //                 <Route path="/watchlist/:listId" element={<WatchlistView />} />
-        //             </Route>
-        //             <Route path="/login" element={<LogIn setIsAuthenticated={setIsAuthenticated} />} />
-        //             <Route path="/signup" element={<Signup />} />
-        //         </Routes>
-        //         <ToastContainer position="top-center" autoClose={3000} />
-        //     </div>
-        // </Router>
         <Router>
         <div className="App">
           <Routes>
