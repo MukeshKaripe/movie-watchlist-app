@@ -22,6 +22,14 @@ const useStyles = makeStyles({
         marginBlock: "4%",
         boxSizing: "border-box",
         backgroundColor: "#ffffff",
+        '@media (max-width: 768px)': {
+            padding: '5%',
+            margin: '8% auto !important',
+            maxWidth:'300px',
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+        },
     },
     inputField: {
         width: "100%",
@@ -37,26 +45,6 @@ const useStyles = makeStyles({
         color: "#fff",
         border: "none",
         padding: '16.5px 14px'
-    },
-    link: {
-        fontSize: "16px",
-        color: bgColors.green,
-        cursor: "pointer",
-    },
-    promptText: {
-        marginBottom: "4%",
-        fontWeight: "bold",
-        textAlign: "left",
-    },
-    blackColor: {
-        color: "#303030",
-        fontWeight: "600",
-        fontSize: "14px",
-    },
-    boldLabel: {
-        fontWeight: "500",
-        fontFamily: "inter",
-        color: "rgba(100, 110, 123, 0.9)",
     },
 });
 
@@ -127,7 +115,7 @@ const LogIn = ({ setIsAuthenticated }: any) => {
     };
     return (
         <Box className={classes.containerMainWrapper} >
-            <div className={classes.container} style={{ width: '500px', margin: 'auto', textAlign: 'center' }}>
+            <Box className={classes.container}  sx={{ width:{ xs: '300px', md: '500px' }, margin: 'auto', textAlign: 'center' }}>
                 <div style={{ width: '300px', margin: 'auto', textAlign: 'center' }}>
                     <h4>LogIn</h4>
                     <Box sx={{ mb: 3 }} >
@@ -151,7 +139,8 @@ const LogIn = ({ setIsAuthenticated }: any) => {
                         Don't Have an account? <a href="/signup">SignUp</a>
                     </Typography>
                 </div>
-            </div>
+            </Box>
+            <ToastContainer position="top-center" autoClose={3000} />
         </Box>
     );
 };

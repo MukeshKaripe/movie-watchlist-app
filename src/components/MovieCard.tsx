@@ -4,11 +4,14 @@ import { RootState } from '../../src/redux/store/index';
 import { createWatchlist, addToWatchlist } from '../../src/redux/store/watchList';
 import { bgColors } from '../utils/colorTheme';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
-import watchList from '../assets/img/bookmark.png';
+import watchList from '../assets/img/bookmark-removebg-preview.png';
+import watchListPlus from '../assets/img/plus-sign-icon-free-png.webp';
+import watchListMinus from '../assets/img/minus-line.jpg';
+import { Tooltip } from '@mui/material';
 import removeIcon from '../assets/img/remove.png';
 import { useSharedStyles } from './SharedStyles';
-import { ToastContainer, toast } from 'react-toastify'; 
-import 'react-toastify/dist/ReactToastify.css'; 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import {
   Box,
@@ -23,10 +26,8 @@ import {
   Select,
   MenuItem,
   DialogActions,
-  Grid,
   Typography,
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 
 interface Movie {
   imdbID: string;
@@ -47,12 +48,13 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const classes = useSharedStyles();
   const [open, setOpen] = useState(false);
   const [newListName, setNewListName] = useState('');
+  const existingWatchlists = useSelector((state: RootState) => state.watchlist.lists);
   const [selectedList, setSelectedList] = useState('');
   const [isInWatchlist, setIsInWatchlist] = useState(false); // Track if movie is in watchlist
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const dispatch = useDispatch();
   const watchlists = useSelector((state: RootState) => state.watchlist.lists);
-
   // Check if the movie is in any watchlist
   const checkIfInWatchlist = () => {
     const isMovieInWatchlist = watchlists.some((list) =>
@@ -60,31 +62,38 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
     );
     setIsInWatchlist(isMovieInWatchlist); // Update state based on the check
   };
-
   const handleClickOpen = () => {
-    if (isMovieInAnyWatchlist()) {
-      toast.error('This movie is already in a watchlist');
-      return;
-    }
     checkIfInWatchlist(); // Check if movie is in watchlist before opening the dialog
-    setOpen(true);
+    // setOpen(true);
+    setIsModalOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
+    setIsModalOpen(false);
     setNewListName('');
     setSelectedList('');
   };
-
   const handleCreateList = () => {
-    if (newListName) {
-      const newId = Date.now().toString();
-      dispatch(createWatchlist({ id: newId, name: newListName }));
-      dispatch(addToWatchlist({ listId: newId, movie }));
-      handleClose();
+    const trimmedName = newListName.trim();
+    // Check if name is empty
+    if (!trimmedName) {
+      toast.error('Please enter a watchlist name');
+      return;
     }
+    // Check if watchlist name already exists (case insensitive)
+    const isExisting = existingWatchlists.some(
+      list => list.name.toLowerCase() === trimmedName.toLowerCase()
+    );
+    if (isExisting) {
+      toast.error(`Watchlist "${trimmedName}" already exists`);
+      return;
+    }
+    const newId = Date.now().toString();
+    dispatch(createWatchlist({ id: newId, name: newListName }));
+    dispatch(addToWatchlist({ listId: newId, movie }));
+    toast.success(`Watchlist "${trimmedName}" created successfully`);
+    handleClose();
   };
-
   const handleAddToExistingList = () => {
     if (selectedList) {
       dispatch(addToWatchlist({ listId: selectedList, movie }));
@@ -92,35 +101,45 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
       handleClose();
     }
   };
- //selected movie
- const isMovieInAnyWatchlist = () => {
-  return watchlists.some(list => 
-    list.movies && list.movies.some(m => m.imdbID === movie.imdbID)
-  );
-};
   return (
-    <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 6 }}>
-      <Grid item xs={12} className={classes.gridWrapper}  >
-        <Box className={classes.cardWrapper}>
-          <Box className={classes.imageMainWrapper}>
-            <img className={classes.imageWrapper} src={movie.Poster} alt={movie.Title} />
-          </Box>
-          <Box className={classes.cardBlock}>
-            <Typography variant='h6' className={`${classes.reactionWrapper} ${classes.posterTitle}`} > <AddReactionIcon className={classes.svgEmojiPosition} /> 86<sup style={{ fontSize: '12px', position: 'relative', top: '0px' }}>/100</sup></Typography>
-            <Typography variant='h6' className={classes.posterTitle}>{movie.Title}</Typography>
-            <Typography className={classes.posterYear} >[{movie.Year}]</Typography>
-            {/* <Button onClick={handleClickOpen}>
-              {isInWatchlist ? 'Already in Watchlist' : 'Add to Watchlist'}
-            </Button> */}
-            <img className={classes.actionsIcon} width={30} height={30}
-              src={isInWatchlist ? removeIcon : watchList}
-              alt={isInWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
-              onClick={handleClickOpen} />
-          </Box>
+    <Box>
+      <Box className={classes.cardWrapper}>
+        <Box className={classes.imageMainWrapper}>
+          <img className={classes.imageWrapper} src={movie.Poster} alt={movie.Title} />
         </Box>
-      </Grid>
+        <Box className={classes.cardBlock}>
+          <Typography variant='h6' className={`${classes.reactionWrapper} ${classes.posterTitle}`} > <AddReactionIcon className={classes.svgEmojiPosition} /> 86<sup style={{ fontSize: '12px', position: 'relative', top: '0px' }}>/100</sup></Typography>
+          <Typography variant='h6' className={classes.posterTitle}>{movie.Title}</Typography>
+          <Typography className={classes.posterYear} >[{movie.Year}]</Typography>
+          <Tooltip
+            title={"Add to Watchlist"}
+            placement="top"
+            arrow
+            enterDelay={500}
+            leaveDelay={200}
+            sx={{
+              '& .MuiTooltip-tooltip': {
+                backgroundColor: 'rgba(0, 0, 0, 0.87)',
+                padding: '8px 12px',
+                fontSize: '14px'
+              }
+            }}
+          >
+            <Box className={classes.actionsIcon}>
+              <img width={30} height={30}
+                src={watchList}
+                alt={"Add to Watchlist"}
+                onClick={handleClickOpen} />
+              <img className={classes.actionsIconSub} width={15} height={15}
+                src={watchListPlus}
+                alt={"Add to Watchlist"}
+                onClick={handleClickOpen} />
+            </Box>
+          </Tooltip>
+        </Box>
+      </Box>
       {/* Dialog to add movie to watchlist */}
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog sx={{'& .MuiDialog-paperScrollPaper':{minWidth:{xs:'200px', md:'410px'}}}} open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <DialogTitle>Add to Watchlist</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -137,7 +156,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
             value={newListName}
             onChange={(e) => setNewListName(e.target.value)}
           />
-          <Button onClick={handleCreateList}>Create & Add</Button>
+          <Button onClick={handleCreateList}>Create & Add</Button> 
           <FormControl fullWidth margin="normal" size="small">
             <InputLabel
               id="watchlist-label"
@@ -173,18 +192,8 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
           <Button onClick={handleAddToExistingList}>Add to Selected</Button>
         </DialogActions>
       </Dialog>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-    </Grid>
+
+    </Box>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@mui/styles';
-import { Box, Button, InputBaseProps, TextField, Theme } from '@mui/material';
+import { Box, Button, InputBaseProps, TextField, Theme, Tooltip } from '@mui/material';
 import { RootState } from '../../src/redux/store/index';
 import { List, ListItem, ListItemText, Typography, IconButton, Drawer } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -10,6 +10,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { bgColors } from '../utils/colorTheme';
 import HomeIcon from '@mui/icons-material/Home';
 import UserMenu from './UserMenu';
+import { BiMoviePlay } from "react-icons/bi";
+import { Padding, Visibility } from '@mui/icons-material';
 
 const useStyles = makeStyles((theme: Theme) => ({
   containersidebar: {
@@ -18,9 +20,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
     height: '94%',
-    [theme.breakpoints.down('sm')]: {
+    '@media (max-width: 767px)': {
       display: 'none !important',
     },
+  },
+  containersidebarDrawer: {
+    padding: '20px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    height: '100%',
   },
   customText: {
     textAlign: 'center',
@@ -30,8 +39,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   menuButton: {
     display: 'none !important',
-    [theme.breakpoints.down('sm')]: {
+    '@media (max-width: 767px)': {
       display: 'block !important',
+      position: 'fixed',
+      left: '20px',
+      Padding: '10px'
     },
   },
   drawer: {
@@ -54,6 +66,28 @@ const useStyles = makeStyles((theme: Theme) => ({
   homeIcon: {
     marginRight: '8px',
   },
+  personContainer: {
+    border: '1px solid #ccc',
+    padding: '0px 10px !important',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    marginBottom: '20px',
+  },
+  movieListIcon: {
+    paddingRight: '7px',
+    width: '20px',
+    height: '20px'
+  },
+  textEllipsis: {
+    width: '150px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  personContainerList: {
+    maxHeight: '50vh',
+    overflow: 'auto'
+  }
 }));
 
 const SideBar: React.FC = () => {
@@ -69,13 +103,6 @@ const SideBar: React.FC = () => {
   const toggleDrawer = (open: boolean) => () => {
     setDrawerOpen(open);
   };
-  const inputProps: InputBaseProps = {
-    style: {
-      borderRadius: "8px",
-      fontSize: "14px",
-      padding: '10px'
-    },
-  };
   const handleNavigateHome = () => {
     navigate('/'); // Navigate to the home path
   };
@@ -90,61 +117,112 @@ const SideBar: React.FC = () => {
       >
         <MenuIcon />
       </IconButton>
-
-      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
-        <div className={classes.drawer}>
+      <Drawer anchor="left" open={drawerOpen}  onClose={toggleDrawer(false)}>
+        <Box className={classes.containersidebarDrawer}>
+          <Box >
+            <Typography className={classes.customText} variant="h6" gutterBottom>
+              Watchlists
+            </Typography>
+            <Box display="flex" alignItems="center" mb={2}>
+              <TextField
+                fullWidth
+                placeholder="Search"
+                InputProps={{
+                  startAdornment: <SearchIcon sx={{ color: bgColors.gray1 }} />,
+                  inputProps: {
+                    style: { padding: '4px 8px' }
+                  }
+                }}
+                className={classes.searchSidebar}
+              />
+            </Box>
+            <Button sx={{ mt: 3, mb: 1 }}
+              variant="contained"
+              className={classes.homeButton}
+              startIcon={<HomeIcon className={classes.homeIcon} />}
+              onClick={handleNavigateHome} >
+              Home
+            </Button>
+            <hr />
+            <Typography variant='h6' pl={2} >My Lists</Typography>
+            <List className={classes.personContainerList}>
+              {watchlists.map((list) => (
+                <Tooltip title={list.name}
+                  placement="top"
+                  arrow
+                  enterDelay={500}
+                  leaveDelay={200}
+                  sx={{
+                    '& .MuiTooltip-tooltip': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.87)',
+                      padding: '8px 12px',
+                      fontSize: '14px'
+                    }
+                  }}>
+                  <ListItem className={classes.personContainer} key={list.id} onClick={() => handleListClick(list.id)} >
+                    <BiMoviePlay className={classes.movieListIcon} />  <ListItemText primary={list.name} className={classes.textEllipsis} />
+                  </ListItem>
+                </Tooltip>
+              ))}
+            </List>
+          </Box>
+          <Box>
+            <UserMenu />
+          </Box>
+        </Box>
+      </Drawer>
+      <Box className={classes.containersidebar}>
+        <Box >
           <Typography className={classes.customText} variant="h6" gutterBottom>
             Watchlists
           </Typography>
-          <List>
+          <Box display="flex" alignItems="center" mb={2}>
+            <TextField
+              fullWidth
+              placeholder="Search"
+              InputProps={{
+                startAdornment: <SearchIcon sx={{ color: bgColors.gray1 }} />,
+                inputProps: {
+                  style: { padding: '4px 8px' }
+                }
+              }}
+              className={classes.searchSidebar}
+            />
+          </Box>
+          <Button sx={{ mt: 3, mb: 1 }}
+            variant="contained"
+            className={classes.homeButton}
+            startIcon={<HomeIcon className={classes.homeIcon} />}
+            onClick={handleNavigateHome} >
+            Home
+          </Button>
+          <hr />
+          <Typography variant='h6' pl={2} >My Lists</Typography>
+          <List className={classes.personContainerList}>
             {watchlists.map((list) => (
-              <ListItem key={list.id} onClick={() => handleListClick(list.id)}>
-                <ListItemText primary={list.name} />
-              </ListItem>
+              <Tooltip title={list.name}
+                placement="top"
+                arrow
+                enterDelay={500}
+                leaveDelay={200}
+                sx={{
+                  '& .MuiTooltip-tooltip': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.87)',
+                    padding: '8px 12px',
+                    fontSize: '14px'
+                  }
+                }}>
+                <ListItem className={classes.personContainer} key={list.id} onClick={() => handleListClick(list.id)} >
+                  <BiMoviePlay className={classes.movieListIcon} />  <ListItemText primary={list.name} className={classes.textEllipsis} />
+                </ListItem>
+              </Tooltip>
             ))}
           </List>
-        </div>
-      </Drawer>
-
-     <Box className={classes.containersidebar}>
-     <Box >
-        <Typography className={classes.customText} variant="h6" gutterBottom>
-          Watchlists
-        </Typography>
-        <Box display="flex" alignItems="center" mb={2}>
-          <TextField
-            fullWidth
-            placeholder="Search"
-            InputProps={{
-              startAdornment: <SearchIcon sx={{ color: bgColors.gray1 }} />,
-              inputProps: {
-                style: { padding: '4px 8px' }
-              }
-            }}
-            className={classes.searchSidebar}
-          />
-
         </Box>
-        <Button sx={{mt:3,mb:1}}
-          variant="contained"
-          className={classes.homeButton}
-          startIcon={<HomeIcon className={classes.homeIcon} />}
-          onClick={handleNavigateHome} >
-          Home
-        </Button>
-        <hr/>
-        <List>
-          {watchlists.map((list) => (
-            <ListItem key={list.id} onClick={() => handleListClick(list.id)}>
-              <ListItemText primary={list.name} />
-            </ListItem>
-          ))}
-        </List>
+        <Box>
+          <UserMenu />
+        </Box>
       </Box>
-      <Box>
-        <UserMenu/>
-      </Box>
-     </Box>
     </>
   );
 };

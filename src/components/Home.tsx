@@ -1,5 +1,5 @@
 // src/components/Home.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { searchMovies, Movie } from '../services/api';
 import MovieCard from './MovieCard';
@@ -12,11 +12,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LoadingComponent from '../common/Loader';
 import { bgColors } from '../utils/colorTheme';
-import { Box } from '@mui/material';
+import { Box, Theme } from '@mui/material';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import WatchlistView from './WatchListView';
 import MovieSearch from './MovieSearch';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider, createTheme } from '@mui/material';
 
 const theme = createTheme();
 
@@ -30,15 +30,28 @@ const useStyles = makeStyles({
     height: '100vh',
     position: 'fixed',
     left: '0',
+    '@media (max-width: 767px)': {
+      // display: 'none !important'
+    }
   },
   containerwrapper: {
     marginLeft: '250px',
     width: 'calc( 100% - 250px)',
+    '@media (max-width: 767px)': {
+      marginLeft: '0px',
+      width: '100%',
+  },
   },
   content: {
     marginLeft: '250px',
     width: 'calc(100% - 250px)',
     padding: '40px',
+    '@media (max-width: 767px)': {
+      marginLeft: '0px',
+      width: '100%',
+      padding: '20px',
+      marginTop: '20px',
+  },
   },
 });
 
@@ -80,7 +93,6 @@ const Home: React.FC = () => {
     }
     return null;
   };
-
   return (
     <Box className={classes.container}>
       <Box className={classes.sidebar}>

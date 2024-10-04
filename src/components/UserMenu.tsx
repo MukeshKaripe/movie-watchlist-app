@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { Box, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { makeStyles } from '@mui/styles';
@@ -51,9 +51,22 @@ const UserMenu = () => {
         <AccountCircleIcon className={classes.personSvg} />
         <Typography className={classes.guestName}>Guest</Typography>
       </Box>
+      <Tooltip  title={'More options'}
+           placement="top"
+           arrow
+           enterDelay={500}
+           leaveDelay={200}
+           sx={{
+             '& .MuiTooltip-tooltip': {
+               backgroundColor: 'rgba(0, 0, 0, 0.87)',
+               padding: '8px 12px',
+               fontSize: '14px'
+             }
+           }}>
       <IconButton onClick={handleMenuOpen}>
         <MoreHorizIcon />
       </IconButton>
+      </Tooltip>
       {/* Menu for the three-dot icon */}
       <Menu
         anchorEl={anchorEl}

@@ -1,19 +1,15 @@
 import { useEffect, useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { makeStyles } from '@mui/styles';
 import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/img/new-pwd-bg.png';
 import { Box, InputBaseProps, InputLabelProps, TextField, Typography } from '@mui/material';
 import { bgColors } from '../utils/colorTheme';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const defaultSignin = [{
     id: '1',
     email: 'mukesh@gmail.com',
-},
-{
-    id: '2',
-    email: 'test@gmail.com',
 },
 ];
 
@@ -71,11 +67,7 @@ const useStyles = makeStyles({
         fontSize: "14px",
         marginTop: "16px",
     },
-    link: {
-        color: "#4CAF50",
-        textDecoration: "none",
-        cursor: "pointer",
-    },
+
 });
 
 const SignUp = () => {
@@ -107,9 +99,17 @@ const SignUp = () => {
         }
     };
     useEffect(() => {
-        const updatedSignin = [...defaultSignin, { ...credentials, id: Date.now().toString() }];
-        setCombinedsignin(updatedSignin);
-        localStorage.setItem('loginData', JSON.stringify(updatedSignin));
+    // Retrieve existing users from localStorage
+    const storedUsersString = localStorage.getItem('loginData');
+    const storedUsers = storedUsersString ? JSON.parse(storedUsersString) : []; // Handle 'null'
+
+    // Append the new user data to the existing users
+    const updatedUsers = [...storedUsers, { ...credentials, id: Date.now().toString() }];
+
+    // Update the state and store the new user data in localStorage
+    setCombinedsignin(updatedUsers);
+    localStorage.setItem('loginData', JSON.stringify(updatedUsers));
+   
     }, [credentials]);
     const inputProps: InputBaseProps = {
         style: {
@@ -147,7 +147,7 @@ const SignUp = () => {
                     </button>
 
                     <Typography className={classes.linkText}>
-                        Have an account? <a href="/login" className={classes.link}>LogIn</a>
+                        Have an account? <a href="/login" >LogIn</a>
                     </Typography>
                 </div>
                 <ToastContainer position="top-right"

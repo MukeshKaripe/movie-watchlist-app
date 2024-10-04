@@ -23,7 +23,10 @@ const useStyles = makeStyles({
     alignItems: 'center',
   },
   containerBlock: {
-    display: 'flex'
+    display: 'flex',
+    '@media (max-width: 768px)': {
+      flexWrap: 'wrap !important',
+  },
   },
   containerWrapper: {
     padding: '10px',
@@ -62,8 +65,7 @@ const MovieSearch: React.FC<MovieSearchProps> = ({
   movies,
 }) => {
   const classes = useStyles();
-  const inputProps: InputBaseProps = {
-  };
+  
   return (
     <Box>
       <Box className={classes.containerWrapper} sx={{ marginBottom: { xs: "10px", sm: "20px", md: "30px", lg: "40px" } }} >
@@ -108,9 +110,9 @@ const MovieSearch: React.FC<MovieSearchProps> = ({
           </Typography>
         </Box>
       ) : (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} columns={15} >
           {movies.map((movie) => (
-            <Grid item xs={12} sm={6} md={4} key={movie.imdbID}>
+            <Grid item xs={12} sm={6} md={3} key={movie.imdbID}>
               <MovieCard movie={movie} isInWatchlist={false} onAddToWatchlist={function (): void {
                 throw new Error('Function not implemented.');
               }} onRemoveFromWatchlist={function (): void {
