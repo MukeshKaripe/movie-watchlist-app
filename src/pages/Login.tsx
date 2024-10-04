@@ -1,11 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import 'react-toastify/dist/ReactToastify.css'; 
 import { makeStyles } from '@mui/styles';
 import { bgColors } from '../utils/colorTheme';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Box, InputBaseProps, InputLabelProps, TextField, Typography } from '@mui/material';
+import backgroundImage from '../assets/img/new-pwd-bg.png';
 
 const useStyles = makeStyles({
+    containerMainWrapper: {
+        display: 'flex',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        alignItems: 'center',
+        backgroundImage: `url(${backgroundImage})`
+    },
     container: {
         boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
         borderRadius: "15px",
@@ -13,51 +22,36 @@ const useStyles = makeStyles({
         marginBlock: "4%",
         boxSizing: "border-box",
         backgroundColor: "#ffffff",
+        '@media (max-width: 768px)': {
+            padding: '5%',
+            margin: '8% auto !important',
+            maxWidth:'300px',
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+        },
     },
     inputField: {
         width: "100%",
-        padding: "10px",
-        marginBottom: "1rem",
         borderRadius: "4px",
-        border: "1px solid #ccc",
-        fontSize: "16px",
     },
     button: {
         backgroundColor: bgColors.green,
         width: "100%",
-        padding: "10px",
         fontSize: "14px",
         fontWeight: "bold",
         borderRadius: "8px",
         cursor: "pointer",
         color: "#fff",
         border: "none",
-    },
-    link: {
-        fontSize: "16px",
-        color: bgColors.green,
-        cursor: "pointer",
-    },
-    promptText: {
-        marginBottom: "4%",
-        fontWeight: "bold",
-        textAlign: "left",
-    },
-    blackColor: {
-        color: "#303030",
-        fontWeight: "600",
-        fontSize: "14px",
-    },
-    boldLabel: {
-        fontWeight: "500",
-        fontFamily: "inter",
-        color: "rgba(100, 110, 123, 0.9)",
+        padding: '16.5px 14px'
     },
 });
 
 const LogIn = ({ setIsAuthenticated }: any) => {
     const [credentials, setCredentials] = useState({ email: '', password: '' });
-    const [passwordError, setPasswordError] = useState(credentials.password);
+    const [focused, setFocused] = useState(false);
+    const [hovered, setHovered] = useState(false);
     const [EmailError, setEmailError] = useState(credentials.email);
     const [error, setError] = useState("");
 
@@ -94,40 +88,60 @@ const LogIn = ({ setIsAuthenticated }: any) => {
                     }
                 }
                 if (!isValidUser) {
-                    toast.error('Invalid email or password!');
+                    toast.error('Invalid email!');
                 }
             } catch (error) {
                 console.error('Error during login:', error);
                 toast.error('An error occurred. Please try again.');
             }
         } else {
-            toast.error('Invalid email or password!');
+            toast.error('Invalid email!');
         }
     };
 
+    const inputProps: InputBaseProps = {
+        style: {
+            borderRadius: "8px",
+            fontSize: "14px",
+            backgroundColor: focused
+                ? bgColors.gray4
+                : hovered
+                    ? bgColors.gray2
+                    : bgColors.white,
+        },
+    };
+    const labelProps: InputLabelProps = {
+        style: { fontSize: 14 },
+    };
     return (
-        <div className={classes.container} style={{ width: '500px', margin: 'auto', textAlign: 'center' }}>
-            <div style={{ width: '300px', margin: 'auto', textAlign: 'center' }}>
-                <h4>LogIn</h4>
-                <input
-                    type="text"
-                    placeholder="Email"
-                    className={classes.inputField}
-                    value={credentials.email}
-                    onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
-                />
-                {EmailError && <span style={{ color: 'red' }}>{EmailError}</span>}
-                <button className={classes.button} onClick={handleLogin}>
-                    LogIn
-                </button>
-                <p style={{ marginTop: '16px' }}>
-                    Don't Have an account? <a href="/signup">SignUp</a>
-                </p>
-            </div>
-            <ToastContainer position="top-right"
-                autoClose={3000}
-                />
-        </div>
+        <Box className={classes.containerMainWrapper} >
+            <Box className={classes.container}  sx={{ width:{ xs: '300px', md: '500px' }, margin: 'auto', textAlign: 'center' }}>
+                <div style={{ width: '300px', margin: 'auto', textAlign: 'center' }}>
+                    <h4>LogIn</h4>
+                    <Box sx={{ mb: 3 }} >
+                        <TextField
+                            label="Email"
+                            type="text"
+                            placeholder="Email"
+                            className={classes.inputField}
+                            value={credentials.email}
+                            InputProps={inputProps}
+                            InputLabelProps={labelProps}
+                            error={!!EmailError}
+                            helperText={EmailError}
+                            onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
+                        />
+                    </Box>
+                    <button className={classes.button} onClick={handleLogin}>
+                        LogIn
+                    </button>
+                    <Typography style={{ marginTop: '16px' }}>
+                        Don't Have an account? <a href="/signup">SignUp</a>
+                    </Typography>
+                </div>
+            </Box>
+            <ToastContainer position="top-center" autoClose={3000} />
+        </Box>
     );
 };
 

@@ -6,7 +6,8 @@ import Home from '../components/Home';
 import Signup from '../pages/SignUp';
 import LogIn from '../pages/Login';
 import MovieCard from '../components/MovieCard';
-import Header from '../components/Header';
+import WatchlistView from '../components/WatchListView';
+import Login from '../pages/Login';
 
 interface PrivateRouteProps {
     children: ReactNode;
@@ -29,28 +30,22 @@ const AppRoutes: React.FC = () => {
 
     return (
         <Router>
-            <div className="App">
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <PrivateRoute isAuthenticated={isAuthenticated}>
-                                <Home />
-                            </PrivateRoute>
-                        }
-                    >
-                        {/* Default route to show MovieCard */}
-                        {/* <Route  index element={<MovieCard />} />  */}
-                        <Route path="movie/:id" element={<Header />} />
-                    </Route>
-                    <Route path="/login" element={<LogIn setIsAuthenticated={setIsAuthenticated} />} />
-                    <Route path="/signup" element={<Signup />} />
-                    {/* Other routes */}
-                </Routes>
-                {/* ToastContainer for displaying toast notifications */}
-                <ToastContainer position="top-center" autoClose={3000} />
-            </div>
-        </Router>
+        <div className="App">
+          <Routes>
+            <Route
+              path="/*"
+              element={
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <Home />
+                </PrivateRoute>
+              }
+            />
+            <Route path="/login" element={<LogIn setIsAuthenticated={setIsAuthenticated} />} />
+            <Route path="/signup" element={<Signup />} />
+          </Routes>
+          <ToastContainer position="top-center" autoClose={3000} />
+        </div>
+      </Router>
     );
 };
 

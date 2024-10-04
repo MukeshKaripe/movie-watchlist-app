@@ -1,22 +1,26 @@
 import { useEffect, useState } from 'react';
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer, toast } from 'react-toastify';
 import { makeStyles } from '@mui/styles';
 import { useNavigate } from 'react-router-dom';
+import backgroundImage from '../assets/img/new-pwd-bg.png';
+import { Box, InputBaseProps, InputLabelProps, TextField, Typography } from '@mui/material';
+import { bgColors } from '../utils/colorTheme';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const defaultSignin = [{
     id: '1',
     email: 'mukesh@gmail.com',
-    //   password: 'Aa2000@@'
-},
-{
-    id: '2',
-    email: 'anil@gmail.com',
-    //   password: 'Aa2000@@'
 },
 ];
 
 const useStyles = makeStyles({
+    containerMainWrapper: {
+        display: 'flex',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        alignItems: 'center',
+        backgroundImage: `url(${backgroundImage})`
+    },
     container: {
         boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
         borderRadius: "15px",
@@ -39,12 +43,7 @@ const useStyles = makeStyles({
     },
     input: {
         width: "100%",
-        padding: "12px",
-        margin: "12px 0",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-        fontSize: "16px",
-        boxSizing: "border-box",
+        borderRadius: "4px",
     },
     errorText: {
         color: "red",
@@ -53,29 +52,28 @@ const useStyles = makeStyles({
         textAlign: "left",
     },
     button: {
-        backgroundColor: "#4CAF50",
-        color: "#ffffff",
-        padding: "10px 20px",
-        border: "none",
+        backgroundColor: bgColors.green,
+        width: "100%",
+        fontSize: "14px",
+        fontWeight: "bold",
         borderRadius: "8px",
         cursor: "pointer",
-        fontSize: "16px",
-        width: "100%",
-        marginTop: "16px",
+        color: "#fff",
+        border: "none",
+        padding: '16.5px 14px',
+        marginBottom: '16px'
     },
     linkText: {
         fontSize: "14px",
         marginTop: "16px",
     },
-    link: {
-        color: "#4CAF50",
-        textDecoration: "none",
-        cursor: "pointer",
-    },
+
 });
 
 const SignUp = () => {
     const [credentials, setCredentials] = useState({ email: '' });
+    const [focused, setFocused] = useState(false);
+    const [hovered, setHovered] = useState(false);
     const [combineSignin, setCombinedsignin] = useState([...defaultSignin]);
     const [EmailError, setEmailError] = useState(credentials.email);
     const navigate = useNavigate();
@@ -93,9 +91,6 @@ const SignUp = () => {
         setEmailError("");
         return true;
     };
-
-
-
     const handleSignup = () => {
         const isEmailValid = validateEmail(credentials.email);
         if (isEmailValid) {
@@ -103,39 +98,63 @@ const SignUp = () => {
             navigate('/login');
         }
     };
-
     useEffect(() => {
-        const updatedSignin = [...defaultSignin, { ...credentials, id: Date.now().toString() }];
-        setCombinedsignin(updatedSignin);  
-        localStorage.setItem('loginData', JSON.stringify(updatedSignin));
+    // Retrieve existing users from localStorage
+    const storedUsersString = localStorage.getItem('loginData');
+    const storedUsers = storedUsersString ? JSON.parse(storedUsersString) : []; // Handle 'null'
+
+    // Append the new user data to the existing users
+    const updatedUsers = [...storedUsers, { ...credentials, id: Date.now().toString() }];
+
+    // Update the state and store the new user data in localStorage
+    setCombinedsignin(updatedUsers);
+    localStorage.setItem('loginData', JSON.stringify(updatedUsers));
+   
     }, [credentials]);
-
+    const inputProps: InputBaseProps = {
+        style: {
+            borderRadius: "8px",
+            fontSize: "14px",
+            backgroundColor: focused
+                ? bgColors.gray4
+                : hovered
+                    ? bgColors.gray2
+                    : bgColors.white,
+        },
+    };
+    const labelProps: InputLabelProps = {
+        style: { fontSize: 14 },
+    };
     return (
-        <div className={classes.container}>
-            <div className={classes.form}>
-                <h4>SignUp</h4>
-                <input
-                    type="email"
-                    placeholder="Email"
-                    className={classes.input}
-                    value={credentials.email}
-                    onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
-                />
-                {EmailError && <div className={classes.errorText}>{EmailError}</div>}
+        <Box className={classes.containerMainWrapper} >
+            <div className={classes.container}>
+                <div className={classes.form}>
+                    <h4>SignUp</h4>
+                    <TextField sx={{ mb: 3 }}
+                        label="Email"
+                        type="text"
+                        placeholder="Email"
+                        className={classes.input}
+                        value={credentials.email}
+                        InputProps={inputProps}
+                        InputLabelProps={labelProps}
+                        error={!!EmailError}
+                        helperText={EmailError}
+                        onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
+                    />
+                    <button className={classes.button} onClick={handleSignup}>
+                        Signup
+                    </button>
 
-
-                <button className={classes.button} onClick={handleSignup}>
-                    Signup
-                </button>
-
-                <div className={classes.linkText}>
-                    Have an account? <a href="/login" className={classes.link}>LogIn</a>
+                    <Typography className={classes.linkText}>
+                        Have an account? <a href="/login" >LogIn</a>
+                    </Typography>
                 </div>
+                <ToastContainer position="top-right"
+                    autoClose={3000}
+                />
             </div>
-            <ToastContainer position="top-right"
-                autoClose={3000}
-            />
-        </div>
+        </Box>
     );
 };
 
