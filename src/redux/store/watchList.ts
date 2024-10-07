@@ -27,6 +27,12 @@ const watchlistSlice = createSlice({
         state.lists.push({ id: action.payload.id, name: action.payload.name, movies: [] });
       }
     },
+    updateWatchlistName: (state, action: PayloadAction<{ listId: string; newName: string }>) => {
+      const list = state.lists.find(l => l.id === action.payload.listId);
+      if (list) {
+        list.name = action.payload.newName;
+      }
+    },
     addToWatchlist: (state, action: PayloadAction<{ listId: string; movie: Movie }>) => {
       const list = state.lists.find(l => l.id === action.payload.listId);
       if (list && !list.movies.some(m => m.imdbID === action.payload.movie.imdbID)) {
@@ -42,5 +48,5 @@ const watchlistSlice = createSlice({
   },
 });
 
-export const { createWatchlist, addToWatchlist, removeFromWatchlist } = watchlistSlice.actions;
+export const { createWatchlist, addToWatchlist, removeFromWatchlist, updateWatchlistName } = watchlistSlice.actions;
 export default watchlistSlice.reducer;

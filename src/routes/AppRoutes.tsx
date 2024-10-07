@@ -5,10 +5,6 @@ import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for Toast
 import Home from '../components/Home';
 import Signup from '../pages/SignUp';
 import LogIn from '../pages/Login';
-import MovieCard from '../components/MovieCard';
-import WatchlistView from '../components/WatchListView';
-import Login from '../pages/Login';
-
 interface PrivateRouteProps {
     children: ReactNode;
     isAuthenticated: boolean;

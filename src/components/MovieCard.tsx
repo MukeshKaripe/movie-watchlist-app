@@ -9,7 +9,7 @@ import watchListPlus from '../assets/img/plus-sign-icon-free-png.webp';
 import watchListMinus from '../assets/img/minus-line.jpg';
 import { Tooltip } from '@mui/material';
 import removeIcon from '../assets/img/remove.png';
-import { useSharedStyles } from './SharedStyles';
+import { useSharedStyles } from '../common/SharedStyles';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

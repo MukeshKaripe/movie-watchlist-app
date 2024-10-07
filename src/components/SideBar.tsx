@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@mui/styles';
-import { Box, Button, InputBaseProps, TextField, Theme, Tooltip } from '@mui/material';
+import { Box, Button, TextField, Theme, Tooltip } from '@mui/material';
 import { RootState } from '../../src/redux/store/index';
 import { List, ListItem, ListItemText, Typography, IconButton, Drawer } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -11,7 +11,7 @@ import { bgColors } from '../utils/colorTheme';
 import HomeIcon from '@mui/icons-material/Home';
 import UserMenu from './UserMenu';
 import { BiMoviePlay } from "react-icons/bi";
-import { Padding, Visibility } from '@mui/icons-material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const useStyles = makeStyles((theme: Theme) => ({
   containersidebar: {
@@ -43,8 +43,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'block !important',
       position: 'fixed',
       left: '20px',
-      Padding: '10px'
     },
+  },
+  closeMenu: {
+    position: 'absolute',
+    right: '20px',
+    top:'10px'
   },
   drawer: {
     width: '250px',
@@ -117,7 +121,8 @@ const SideBar: React.FC = () => {
       >
         <MenuIcon />
       </IconButton>
-      <Drawer anchor="left" open={drawerOpen}  onClose={toggleDrawer(false)}>
+      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+        <CloseIcon className={classes.closeMenu} onClick={() => setDrawerOpen(false)} />
         <Box className={classes.containersidebarDrawer}>
           <Box >
             <Typography className={classes.customText} variant="h6" gutterBottom>

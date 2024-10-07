@@ -1,33 +1,48 @@
-// src/components/WatchlistView.tsx
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { RootState } from '../../src/redux/store/index';
-import { removeFromWatchlist } from '../../src/redux/store/watchList';
-import { Box, Typography, Grid, Card, CardMedia, CardContent, Button, Tooltip } from '@mui/material';
+import { removeFromWatchlist, updateWatchlistName } from '../../src/redux/store/watchList';
+import { Box, Typography, Grid, Tooltip, Dialog, DialogTitle, DialogContent, Input, DialogActions, Button } from '@mui/material';
 import { FiEdit } from "react-icons/fi";
-import { useSharedStyles } from './SharedStyles';
+import { useSharedStyles } from '../common/SharedStyles';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import { FaCheck } from "react-icons/fa";
 import { bgColors } from '../utils/colorTheme';
-import watchListMinus from '../assets/img/minus-line.jpg';
 import { FaMinusCircle } from "react-icons/fa";
-import { Console } from 'console';
 
 const WatchlistView: React.FC = () => {
   const classes = useSharedStyles();
   const [isWatched, setIsWatched] = useState<any[]>([]);
   const [hovered, setHovered] = useState(false);
   const { listId } = useParams<{ listId: string }>();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newName, setNewName] = useState('');
   const dispatch = useDispatch();
   const watchlist = useSelector((state: RootState) =>
     state.watchlist.lists.find(list => list.id === listId)
   );
+  React.useEffect(() => {
+    if (watchlist) {
+      setNewName(watchlist.name);
+    }
+  }, [watchlist]);
 
   if (!watchlist) {
     return <Typography>Watchlist not found</Typography>;
   }
+  const handleOpenDialog = () => setIsDialogOpen(true);
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setNewName(watchlist.name); 
+  };
 
+  const handleUpdateName = () => {
+    if (newName.trim() !== '') {
+      dispatch(updateWatchlistName({ listId: watchlist.id, newName: newName.trim() }));
+      setIsDialogOpen(false);
+    }
+  };
   const handleRemoveMovie = (movieId: string) => {
     if (listId) {
       dispatch(removeFromWatchlist({ listId, movieId }));
@@ -39,11 +54,9 @@ const WatchlistView: React.FC = () => {
   const handleWatchedToggle = (movieId:String) => {
     isWatched.push(movieId)
   };
-  console.log(isWatched)
-
   return (
     <Box>
-      <Typography variant="h4">{watchlist.name} <FiEdit className={classes.editIcon} /> </Typography>
+      <Typography variant="h4">{watchlist.name} <FiEdit className={classes.editIcon} onClick={handleOpenDialog} /> </Typography>
       <Typography variant="h6">About this watchlist</Typography>
       <Typography className={classes.textlorep} variant="h6">This list Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolor totam hic praesentium numquam obcaecati, laudantium atque beatae quo esse dolorem consectetur debitis, placeat quibusdam culpa doloribus soluta officia asperiores sequi.</Typography>
       <Grid container spacing={2} columns={15}>
@@ -99,6 +112,20 @@ const WatchlistView: React.FC = () => {
           </Grid>
         ))}
       </Grid>
+      <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+        <DialogTitle>Edit Watchlist Name</DialogTitle>
+        <DialogContent>
+          <Input
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            placeholder="Enter new name"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleUpdateName}>Update</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
