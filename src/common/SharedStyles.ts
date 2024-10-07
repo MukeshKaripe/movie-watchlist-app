@@ -73,7 +73,8 @@ export const useSharedStyles = makeStyles({
   editIcon: {
     paddingLeft: '7px',
     width: '20px',
-    height: '20px'
+    height: '20px',
+    cursor: 'pointer',
   },
   textlorep: {
     color: `${bgColors.gray1}`,
