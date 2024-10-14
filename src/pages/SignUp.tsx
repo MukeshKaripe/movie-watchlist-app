@@ -72,9 +72,9 @@ const useStyles = makeStyles({
 
 const SignUp = () => {
     const [credentials, setCredentials] = useState({ email: '' });
-    const [focused, setFocused] = useState(false);
-    const [hovered, setHovered] = useState(false);
     const [combineSignin, setCombinedsignin] = useState([...defaultSignin]);
+    console.log(combineSignin);
+
     const [EmailError, setEmailError] = useState(credentials.email);
     const navigate = useNavigate();
     const classes = useStyles();
@@ -99,27 +99,21 @@ const SignUp = () => {
         }
     };
     useEffect(() => {
-    // Retrieve existing users from localStorage
-    const storedUsersString = localStorage.getItem('loginData');
-    const storedUsers = storedUsersString ? JSON.parse(storedUsersString) : []; // Handle 'null'
+        // Retrieve existing users from localStorage
+        const storedUsersString = localStorage.getItem('loginData');
+        const storedUsers = storedUsersString ? JSON.parse(storedUsersString) : [];
+        // Append the new user data to the existing users
+        const updatedUsers = [...storedUsers, { ...credentials, id: Date.now().toString() }];
+        // Update the state and store the new user data in localStorage
+        setCombinedsignin(updatedUsers);
+        localStorage.setItem('loginData', JSON.stringify(updatedUsers));
 
-    // Append the new user data to the existing users
-    const updatedUsers = [...storedUsers, { ...credentials, id: Date.now().toString() }];
-
-    // Update the state and store the new user data in localStorage
-    setCombinedsignin(updatedUsers);
-    localStorage.setItem('loginData', JSON.stringify(updatedUsers));
-   
     }, [credentials]);
     const inputProps: InputBaseProps = {
         style: {
             borderRadius: "8px",
             fontSize: "14px",
-            backgroundColor: focused
-                ? bgColors.gray4
-                : hovered
-                    ? bgColors.gray2
-                    : bgColors.white,
+            backgroundColor: bgColors.gray4
         },
     };
     const labelProps: InputLabelProps = {
@@ -145,15 +139,14 @@ const SignUp = () => {
                     <button className={classes.button} onClick={handleSignup}>
                         Signup
                     </button>
-
                     <Typography className={classes.linkText}>
                         Have an account? <a href="/login" >LogIn</a>
                     </Typography>
                 </div>
-                <ToastContainer position="top-right"
-                    autoClose={3000}
-                />
             </div>
+            <ToastContainer position="top-center"
+                autoClose={3000}
+            />
         </Box>
     );
 };

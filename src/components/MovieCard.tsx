@@ -4,11 +4,9 @@ import { RootState } from '../../src/redux/store/index';
 import { createWatchlist, addToWatchlist } from '../../src/redux/store/watchList';
 import { bgColors } from '../utils/colorTheme';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
-import watchList from '../assets/img/bookmark-removebg-preview.png';
+import watchList from '../assets/img/brp.png';
 import watchListPlus from '../assets/img/plus-sign-icon-free-png.webp';
-import watchListMinus from '../assets/img/minus-line.jpg';
 import { Tooltip } from '@mui/material';
-import removeIcon from '../assets/img/remove.png';
 import { useSharedStyles } from '../common/SharedStyles';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -192,7 +190,9 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
           <Button onClick={handleAddToExistingList}>Add to Selected</Button>
         </DialogActions>
       </Dialog>
-
+      <ToastContainer position="top-center"
+                    autoClose={3000}
+                />
     </Box>
   );
 };
