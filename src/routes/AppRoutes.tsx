@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify'; // Import here
+import { ToastContainer } from 'react-toastify'; // Import here
 import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for Toast
 import Home from '../components/Home';
 import Signup from '../pages/SignUp';

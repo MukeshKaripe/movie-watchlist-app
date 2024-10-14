@@ -16,7 +16,7 @@ import {
   Button,
   Dialog,
   DialogTitle,
-  DialogContent,
+  DialogContent,        
   DialogContentText,
   TextField,
   FormControl,
@@ -45,12 +45,15 @@ interface MovieCardProps {
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const classes = useSharedStyles();
   const [open, setOpen] = useState(false);
-  const [newListName, setNewListName] = useState('');
+  
+  
+  const [newListName, setNewListName] = useState(''); 
   const existingWatchlists = useSelector((state: RootState) => state.watchlist.lists);
   const [selectedList, setSelectedList] = useState('');
   const [isInWatchlist, setIsInWatchlist] = useState(false); // Track if movie is in watchlist
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  
+  console.log(open,isInWatchlist);
   const dispatch = useDispatch();
   const watchlists = useSelector((state: RootState) => state.watchlist.lists);
   // Check if the movie is in any watchlist

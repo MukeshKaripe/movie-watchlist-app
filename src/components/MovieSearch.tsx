@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, TextField, Button, Typography, Box, InputBaseProps } from '@mui/material';
+import { Grid, TextField, Button, Typography, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import MovieCard from './MovieCard';
 import { Movie } from '../services/api';

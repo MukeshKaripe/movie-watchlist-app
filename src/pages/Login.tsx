@@ -25,7 +25,7 @@ const useStyles = makeStyles({
         '@media (max-width: 768px)': {
             padding: '5%',
             margin: '8% auto !important',
-            maxWidth:'300px',
+            maxWidth: '300px',
             display: 'flex',
             justifyContent: 'flex-start',
             alignItems: 'center',
@@ -50,10 +50,10 @@ const useStyles = makeStyles({
 
 const LogIn = ({ setIsAuthenticated }: any) => {
     const [credentials, setCredentials] = useState({ email: '', password: '' });
-    const [focused, setFocused] = useState(false);
-    const [hovered, setHovered] = useState(false);
+    const focused = false
+    const hovered = false
     const [EmailError, setEmailError] = useState(credentials.email);
-    const [error, setError] = useState("");
+    // const [error, setError] = useState("");
 
     const classes = useStyles();
     const navigate = useNavigate();
@@ -115,7 +115,7 @@ const LogIn = ({ setIsAuthenticated }: any) => {
     };
     return (
         <Box className={classes.containerMainWrapper} >
-            <Box className={classes.container}  sx={{ width:{ xs: '300px', md: '500px' }, margin: 'auto', textAlign: 'center' }}>
+            <Box className={classes.container} sx={{ width: { xs: '300px', md: '500px' }, margin: 'auto', textAlign: 'center' }}>
                 <div style={{ width: '300px', margin: 'auto', textAlign: 'center' }}>
                     <h4>LogIn</h4>
                     <Box sx={{ mb: 3 }} >

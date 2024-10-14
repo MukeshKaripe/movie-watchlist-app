@@ -13,7 +13,8 @@ import { FaMinusCircle } from "react-icons/fa";
 
 const WatchlistView: React.FC = () => {
   const classes = useSharedStyles();
-  const [isWatched, setIsWatched] = useState<any[]>([]);
+  // const [isWatched, setIsWatched] = useState<any[]>([]);
+  const isWatched: any[] = []
   const [hovered, setHovered] = useState(false);
   const { listId } = useParams<{ listId: string }>();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -34,7 +35,7 @@ const WatchlistView: React.FC = () => {
   const handleOpenDialog = () => setIsDialogOpen(true);
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
-    setNewName(watchlist.name); 
+    setNewName(watchlist.name);
   };
 
   const handleUpdateName = () => {
@@ -51,9 +52,11 @@ const WatchlistView: React.FC = () => {
       // Optionally, you can handle this case by showing a message or redirecting the user
     }
   };
-  const handleWatchedToggle = (movieId:String) => {
+  const handleWatchedToggle = (movieId: String) => {
     isWatched.push(movieId)
   };
+
+  console.log(hovered)
   return (
     <Box>
       <Typography variant="h4">{watchlist.name} <FiEdit className={classes.editIcon} onClick={handleOpenDialog} /> </Typography>
@@ -72,7 +75,7 @@ const WatchlistView: React.FC = () => {
                 <Typography variant='h6' className={classes.posterTitle}>{movie.Title}</Typography>
                 <Typography className={classes.posterYear} >[{movie.Year}]</Typography>
                 <Tooltip
-                  title={isWatched.includes(movie?.imdbID)? "Mark as unwatched" : "Mark as watched"}
+                  title={isWatched.includes(movie?.imdbID) ? "Mark as unwatched" : "Mark as watched"}
                   placement="top"
                   arrow
                   enterDelay={500}
@@ -86,7 +89,7 @@ const WatchlistView: React.FC = () => {
                   }}
                 >
                   <Box className={classes.actionsIconWacthed} >
-                    <FaCheck onClick={()=>handleWatchedToggle(movie.imdbID)} style={{ fill: (isWatched.includes(movie?.imdbID)) ? `${bgColors.green}` : `${bgColors.white}` }} className={classes.actionsIconWacthedSvg} />
+                    <FaCheck onClick={() => handleWatchedToggle(movie.imdbID)} style={{ fill: (isWatched.includes(movie?.imdbID)) ? `${bgColors.green}` : `${bgColors.white}` }} className={classes.actionsIconWacthedSvg} />
                   </Box>
                 </Tooltip>
                 <Tooltip
