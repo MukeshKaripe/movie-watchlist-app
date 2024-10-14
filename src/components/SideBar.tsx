@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   closeMenu: {
     position: 'absolute',
     right: '20px',
-    top:'10px'
+    top: '10px'
   },
   drawer: {
     width: '250px',
@@ -97,19 +97,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SideBar: React.FC = () => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
   const watchlists = useSelector((state: RootState) => state.watchlist.lists);
   const [drawerOpen, setDrawerOpen] = useState(false);
-
   const handleListClick = (listId: string) => {
     navigate(`/watchlist/${listId}`);
   };
-
   const toggleDrawer = (open: boolean) => () => {
     setDrawerOpen(open);
   };
   const handleNavigateHome = () => {
     navigate('/'); // Navigate to the home path
   };
+  //filter search
+  const filteredWatchlists = watchlists.filter((list) =>
+    list.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   return (
     <>
       <IconButton
@@ -132,6 +135,8 @@ const SideBar: React.FC = () => {
               <TextField
                 fullWidth
                 placeholder="Search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 InputProps={{
                   startAdornment: <SearchIcon sx={{ color: bgColors.gray1 }} />,
                   inputProps: {
@@ -151,8 +156,9 @@ const SideBar: React.FC = () => {
             <hr />
             <Typography variant='h6' pl={2} >My Lists</Typography>
             <List className={classes.personContainerList}>
-              {watchlists.map((list) => (
-                <Tooltip title={list.name}
+              {filteredWatchlists.map((list) => (
+                <Tooltip
+                  title={list.name}
                   placement="top"
                   arrow
                   enterDelay={500}
@@ -163,9 +169,15 @@ const SideBar: React.FC = () => {
                       padding: '8px 12px',
                       fontSize: '14px'
                     }
-                  }}>
-                  <ListItem className={classes.personContainer} key={list.id} onClick={() => handleListClick(list.id)} >
-                    <BiMoviePlay className={classes.movieListIcon} />  <ListItemText primary={list.name} className={classes.textEllipsis} />
+                  }}
+                  key={list.id} // Moved key here for better optimization
+                >
+                  <ListItem
+                    className={classes.personContainer}
+                    onClick={() => handleListClick(list.id)}
+                  >
+                    <BiMoviePlay className={classes.movieListIcon} />
+                    <ListItemText primary={list.name} className={classes.textEllipsis} />
                   </ListItem>
                 </Tooltip>
               ))}
@@ -185,6 +197,8 @@ const SideBar: React.FC = () => {
             <TextField
               fullWidth
               placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               InputProps={{
                 startAdornment: <SearchIcon sx={{ color: bgColors.gray1 }} />,
                 inputProps: {
@@ -204,8 +218,9 @@ const SideBar: React.FC = () => {
           <hr />
           <Typography variant='h6' pl={2} >My Lists</Typography>
           <List className={classes.personContainerList}>
-            {watchlists.map((list) => (
-              <Tooltip title={list.name}
+            {(filteredWatchlists?.map((list) => (
+              <Tooltip
+                title={list.name}
                 placement="top"
                 arrow
                 enterDelay={500}
@@ -216,12 +231,18 @@ const SideBar: React.FC = () => {
                     padding: '8px 12px',
                     fontSize: '14px'
                   }
-                }}>
-                <ListItem className={classes.personContainer} key={list.id} onClick={() => handleListClick(list.id)} >
-                  <BiMoviePlay className={classes.movieListIcon} />  <ListItemText primary={list.name} className={classes.textEllipsis} />
+                }}
+                key={list.id} // Moved key here for better optimization
+              >
+                <ListItem
+                  className={classes.personContainer}
+                  onClick={() => handleListClick(list.id)}
+                >
+                  <BiMoviePlay className={classes.movieListIcon} />
+                  <ListItemText primary={list.name} className={classes.textEllipsis} />
                 </ListItem>
               </Tooltip>
-            ))}
+            )))}
           </List>
         </Box>
         <Box>

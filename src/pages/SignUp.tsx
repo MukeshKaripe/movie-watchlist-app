@@ -74,11 +74,9 @@ const SignUp = () => {
     const [credentials, setCredentials] = useState({ email: '' });
     const [combineSignin, setCombinedsignin] = useState([...defaultSignin]);
     console.log(combineSignin);
-
     const [EmailError, setEmailError] = useState(credentials.email);
     const navigate = useNavigate();
     const classes = useStyles();
-
     const validateEmail = (email: string) => {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (email === "") {
@@ -94,7 +92,9 @@ const SignUp = () => {
     const handleSignup = () => {
         const isEmailValid = validateEmail(credentials.email);
         if (isEmailValid) {
-            toast.success('Account Created');
+            setTimeout(() => {
+                toast.success('Account Created');
+            }, 0);
             navigate('/login');
         }
     };
@@ -107,7 +107,6 @@ const SignUp = () => {
         // Update the state and store the new user data in localStorage
         setCombinedsignin(updatedUsers);
         localStorage.setItem('loginData', JSON.stringify(updatedUsers));
-
     }, [credentials]);
     const inputProps: InputBaseProps = {
         style: {

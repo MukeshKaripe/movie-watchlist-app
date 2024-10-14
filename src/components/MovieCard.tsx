@@ -16,7 +16,7 @@ import {
   Button,
   Dialog,
   DialogTitle,
-  DialogContent,        
+  DialogContent,
   DialogContentText,
   TextField,
   FormControl,
@@ -45,15 +45,12 @@ interface MovieCardProps {
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const classes = useSharedStyles();
   const [open, setOpen] = useState(false);
-  
-  
-  const [newListName, setNewListName] = useState(''); 
+  const [newListName, setNewListName] = useState('');
   const existingWatchlists = useSelector((state: RootState) => state.watchlist.lists);
   const [selectedList, setSelectedList] = useState('');
   const [isInWatchlist, setIsInWatchlist] = useState(false); // Track if movie is in watchlist
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  console.log(open,isInWatchlist);
+  console.log(open, isInWatchlist);
   const dispatch = useDispatch();
   const watchlists = useSelector((state: RootState) => state.watchlist.lists);
   // Check if the movie is in any watchlist
@@ -78,7 +75,9 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
     const trimmedName = newListName.trim();
     // Check if name is empty
     if (!trimmedName) {
-      toast.error('Please enter a watchlist name');
+      setTimeout(() => {
+        toast.error('Please enter a watchlist name');
+      }, 0);
       return;
     }
     // Check if watchlist name already exists (case insensitive)
@@ -86,24 +85,31 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
       list => list.name.toLowerCase() === trimmedName.toLowerCase()
     );
     if (isExisting) {
-      toast.error(`Watchlist "${trimmedName}" already exists`);
+      setTimeout(() => {
+        toast.error(`Watchlist "${trimmedName}" already exists`);
+      }, 0);
       return;
     }
     const newId = Date.now().toString();
     dispatch(createWatchlist({ id: newId, name: newListName }));
     dispatch(addToWatchlist({ listId: newId, movie }));
-    toast.success(`Watchlist "${trimmedName}" created successfully`);
+    setTimeout(() => {
+      toast.success(`Watchlist "${trimmedName}" created successfully`);
+    }, 0);
     handleClose();
   };
   const handleAddToExistingList = () => {
     if (selectedList) {
       dispatch(addToWatchlist({ listId: selectedList, movie }));
-      toast.success(`${movie.Title} Movie added to Watchlist Succefully`);
+      setTimeout(() => {
+        toast.success(`${movie.Title} Movie added to Watchlist Succefully`);
+      }, 0);
       handleClose();
     }
   };
   return (
     <Box>
+      <ToastContainer position="top-center" autoClose={3000} />
       <Box className={classes.cardWrapper}>
         <Box className={classes.imageMainWrapper}>
           <img className={classes.imageWrapper} src={movie.Poster} alt={movie.Title} />
@@ -140,7 +146,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
         </Box>
       </Box>
       {/* Dialog to add movie to watchlist */}
-      <Dialog sx={{'& .MuiDialog-paperScrollPaper':{minWidth:{xs:'200px', md:'410px'}}}} open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      <Dialog sx={{ '& .MuiDialog-paperScrollPaper': { minWidth: { xs: '200px', md: '410px' } } }} open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <DialogTitle>Add to Watchlist</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -157,7 +163,8 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
             value={newListName}
             onChange={(e) => setNewListName(e.target.value)}
           />
-          <Button onClick={handleCreateList}>Create & Add</Button> 
+          <Button className={classes.createAdd} onClick={handleCreateList}>Create & Add</Button>
+          <hr></hr>
           <FormControl fullWidth margin="normal" size="small">
             <InputLabel
               id="watchlist-label"
@@ -189,13 +196,10 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button sx={{ color: bgColors.gray1 }} onClick={handleClose}>Cancel</Button>
           <Button onClick={handleAddToExistingList}>Add to Selected</Button>
         </DialogActions>
       </Dialog>
-      <ToastContainer position="top-center"
-                    autoClose={3000}
-                />
     </Box>
   );
 };

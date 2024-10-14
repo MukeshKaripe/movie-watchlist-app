@@ -82,5 +82,11 @@ export const useSharedStyles = makeStyles({
     fontSize: '13px !important',
     marginBottom: '2rem !important'
   },
-
+  createAdd:{
+    width: '100%',
+    padding:'10px',
+    backgroundColor:`${bgColors.blue} !important `,
+    margin: '1rem 0px !important',
+    color:`${bgColors.white} !important `,
+  }
 });

@@ -13,8 +13,7 @@ import { FaMinusCircle } from "react-icons/fa";
 
 const WatchlistView: React.FC = () => {
   const classes = useSharedStyles();
-  // const [isWatched, setIsWatched] = useState<any[]>([]);
-  const isWatched: any[] = []
+  const [isWatched, setIsWatched] = useState<any[]>([]);
   const [hovered, setHovered] = useState(false);
   const { listId } = useParams<{ listId: string }>();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -53,9 +52,9 @@ const WatchlistView: React.FC = () => {
     }
   };
   const handleWatchedToggle = (movieId: String) => {
-    isWatched.push(movieId)
+    isWatched.push(movieId);
+    console.log(setIsWatched(isWatched));
   };
-
   console.log(hovered)
   return (
     <Box>
