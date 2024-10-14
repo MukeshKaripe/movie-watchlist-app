@@ -1,18 +1,12 @@
 // src/components/Home.tsx
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { searchMovies, Movie } from '../services/api';
-import MovieCard from './MovieCard';
+import { searchMovies } from '../services/api';
 import SideBar from './SideBar';
 import { makeStyles } from '@mui/styles';
 import { RootState } from '../../src/redux/store/index';
 import { setMovies, setLoading } from '../../src/redux/store/movieSlice';
-import { addToWatchlist, removeFromWatchlist } from '../../src/redux/store/watchList';
-import SearchIcon from '@mui/icons-material/Search';
-import DeleteIcon from '@mui/icons-material/Delete';
-import LoadingComponent from '../common/Loader';
-import { bgColors } from '../utils/colorTheme';
-import { Box, Theme } from '@mui/material';
+import { Box } from '@mui/material';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import WatchlistView from './WatchListView';
 import MovieSearch from './MovieSearch';
@@ -61,8 +55,6 @@ const Home: React.FC = () => {
   const dispatch = useDispatch();
   const movies = useSelector((state: RootState) => state.movies.movies);
   const loading = useSelector((state: RootState) => state.movies.loading);
-  const watchlists = useSelector((state: RootState) => state.watchlist.lists);
-
   const [query, setQuery] = useState('');
 
   const handleSearch = async () => {
