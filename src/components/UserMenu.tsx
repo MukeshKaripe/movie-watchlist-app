@@ -4,6 +4,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { makeStyles } from '@mui/styles';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const useStyles = makeStyles({
   personContainer: {
@@ -42,7 +44,12 @@ const UserMenu = () => {
 
   const handleSignOut = () => {
     localStorage.removeItem('isAuthenticated');
-    navigate('/login'); // Redirect to login page after sign out
+    setTimeout(() => {
+      toast.success('Logout successful!');
+      setTimeout(() => {
+        navigate('/login');
+      }, 1000);
+    }, 0);
   };
 
   return (
@@ -51,21 +58,21 @@ const UserMenu = () => {
         <AccountCircleIcon className={classes.personSvg} />
         <Typography className={classes.guestName}>Guest</Typography>
       </Box>
-      <Tooltip  title={'More options'}
-           placement="top"
-           arrow
-           enterDelay={500}
-           leaveDelay={200}
-           sx={{
-             '& .MuiTooltip-tooltip': {
-               backgroundColor: 'rgba(0, 0, 0, 0.87)',
-               padding: '8px 12px',
-               fontSize: '14px'
-             }
-           }}>
-      <IconButton onClick={handleMenuOpen}>
-        <MoreHorizIcon />
-      </IconButton>
+      <Tooltip title={'More options'}
+        placement="top"
+        arrow
+        enterDelay={500}
+        leaveDelay={200}
+        sx={{
+          '& .MuiTooltip-tooltip': {
+            backgroundColor: 'rgba(0, 0, 0, 0.87)',
+            padding: '8px 12px',
+            fontSize: '14px'
+          }
+        }}>
+        <IconButton onClick={handleMenuOpen}>
+          <MoreHorizIcon />
+        </IconButton>
       </Tooltip>
       {/* Menu for the three-dot icon */}
       <Menu
@@ -74,6 +81,7 @@ const UserMenu = () => {
         onClose={handleMenuClose} >
         <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
       </Menu>
+      <ToastContainer position="top-center" autoClose={3000} />
     </Box>
   );
 };

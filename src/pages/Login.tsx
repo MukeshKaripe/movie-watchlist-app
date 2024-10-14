@@ -81,9 +81,13 @@ const LogIn = ({ setIsAuthenticated }: any) => {
                     if (credentials.email === element.email) {
                         setIsAuthenticated(true);
                         localStorage.setItem('isAuthenticated', 'true');
-                        toast.success('Login successful!');
-                        navigate('/');
                         isValidUser = true;
+                        setTimeout(() => {
+                            toast.success('Login successful!');
+                            setTimeout(() => {
+                                navigate('/');
+                            }, 1000);
+                        }, 0);
                         break;
                     }
                 }
