@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/movie-watchlist-app/static/css/main.70dddff4.css",
+    "main.js": "/movie-watchlist-app/static/js/main.7e53dbfe.js",
+    "static/media/new-pwd-bg.png": "/movie-watchlist-app/static/media/new-pwd-bg.fc8b91ebdd60719389f4.png",
+    "static/media/brp.png": "/movie-watchlist-app/static/media/brp.5dc41a53cb939f213162.png",
+    "index.html": "/movie-watchlist-app/index.html",
+    "static/media/plus-sign-icon-free-png.webp": "/movie-watchlist-app/static/media/plus-sign-icon-free-png.2c15dde1d9952256bd8a.webp",
+    "main.70dddff4.css.map": "/movie-watchlist-app/static/css/main.70dddff4.css.map",
+    "main.7e53dbfe.js.map": "/movie-watchlist-app/static/js/main.7e53dbfe.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.70dddff4.css",
+    "static/js/main.7e53dbfe.js"
+  ]
+}
