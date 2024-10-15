@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../src/redux/store/index';
 import { createWatchlist, addToWatchlist } from '../../src/redux/store/watchList';
@@ -48,12 +48,8 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const [newListName, setNewListName] = useState('');
   const existingWatchlists = useSelector((state: RootState) => state.watchlist.lists);
   const [selectedList, setSelectedList] = useState('');
-  const [isInWatchlist, setIsInWatchlist] = useState(false); // Track if movie is in watchlist
+  const [isInWatchlist, setIsInWatchlist] = useState(false); 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  if(open && isInWatchlist){
-    open && setOpen(open);
-  isInWatchlist && setIsInWatchlist(isInWatchlist);
-  }
   const dispatch = useDispatch();
   const watchlists = useSelector((state: RootState) => state.watchlist.lists);
   // Check if the movie is in any watchlist
@@ -110,6 +106,12 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
       handleClose();
     }
   };
+  useEffect(() => {
+    if (open && isInWatchlist) {
+      open && setOpen(open);
+      isInWatchlist && setIsInWatchlist(isInWatchlist);
+    }
+  }, [isInWatchlist, open])
   return (
     <Box>
       <Box className={classes.cardWrapper}>

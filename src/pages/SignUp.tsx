@@ -73,9 +73,6 @@ const useStyles = makeStyles({
 const SignUp = () => {
     const [credentials, setCredentials] = useState({ email: '' });
     const [combineSignin, setCombinedsignin] = useState([...defaultSignin]);
- if (combineSignin) {
-        combineSignin && setCombinedsignin(combineSignin)
-    }
     const [EmailError, setEmailError] = useState(credentials.email);
     const navigate = useNavigate();
     const classes = useStyles();
@@ -101,15 +98,16 @@ const SignUp = () => {
         }
     };
     useEffect(() => {
+        if (combineSignin) {
+            setCombinedsignin([...defaultSignin]);   }
         // Retrieve existing users from localStorage
         const storedUsersString = localStorage.getItem('loginData');
         const storedUsers = storedUsersString ? JSON.parse(storedUsersString) : [];
         // Append the new user data to the existing users
         const updatedUsers = [...storedUsers, { ...credentials, id: Date.now().toString() }];
-        // Update the state and store the new user data in localStorage
         setCombinedsignin(updatedUsers);
         localStorage.setItem('loginData', JSON.stringify(updatedUsers));
-    }, [credentials]);
+    }, [credentials,combineSignin]);
     const inputProps: InputBaseProps = {
         style: {
             borderRadius: "8px",

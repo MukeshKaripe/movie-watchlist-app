@@ -22,6 +22,9 @@ const WatchlistView: React.FC = () => {
   const watchlist = useSelector((state: RootState) =>
     state.watchlist.lists.find(list => list.id === listId)
   );
+  const methodImplement= ()=>{
+    console.log(setIsWatched,hovered);
+  }
   React.useEffect(() => {
     if (watchlist) {
       setNewName(watchlist.name);
@@ -41,6 +44,7 @@ const WatchlistView: React.FC = () => {
     if (newName.trim() !== '') {
       dispatch(updateWatchlistName({ listId: watchlist.id, newName: newName.trim() }));
       setIsDialogOpen(false);
+      methodImplement()
     }
   };
   const handleRemoveMovie = (movieId: string) => {
@@ -53,12 +57,7 @@ const WatchlistView: React.FC = () => {
   };
   const handleWatchedToggle = (movieId: String) => {
     isWatched.push(movieId);
-  if (isWatched && hovered) {
-      isWatched && setIsWatched(isWatched);
-      hovered && setHovered(hovered);
-    }
   };
-  console.log(hovered)
   return (
     <Box>
       <Typography variant="h4">{watchlist.name} <FiEdit className={classes.editIcon} onClick={handleOpenDialog} /> </Typography>
