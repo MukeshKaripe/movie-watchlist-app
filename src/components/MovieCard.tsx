@@ -112,7 +112,6 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   };
   return (
     <Box>
-      {/* <ToastContainer position="top-center" autoClose={3000} /> */}
       <Box className={classes.cardWrapper}>
         <Box className={classes.imageMainWrapper}>
           <img className={classes.imageWrapper} src={movie.Poster} alt={movie.Title} />

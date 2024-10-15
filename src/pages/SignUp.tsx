@@ -73,7 +73,7 @@ const useStyles = makeStyles({
 const SignUp = () => {
     const [credentials, setCredentials] = useState({ email: '' });
     const [combineSignin, setCombinedsignin] = useState([...defaultSignin]);
-    if (combineSignin) {
+ if (combineSignin) {
         combineSignin && setCombinedsignin(combineSignin)
     }
     const [EmailError, setEmailError] = useState(credentials.email);
