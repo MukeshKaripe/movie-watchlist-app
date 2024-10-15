@@ -53,9 +53,11 @@ const WatchlistView: React.FC = () => {
   };
   const handleWatchedToggle = (movieId: String) => {
     isWatched.push(movieId);
-    console.log(setIsWatched(isWatched));
+    if (isWatched && hovered) {
+      isWatched && setIsWatched(isWatched);
+      hovered && setHovered(hovered);
+    }
   };
-  console.log(hovered)
   return (
     <Box>
       <Typography variant="h4">{watchlist.name} <FiEdit className={classes.editIcon} onClick={handleOpenDialog} /> </Typography>

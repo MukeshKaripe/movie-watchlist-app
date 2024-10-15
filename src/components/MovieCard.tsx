@@ -8,7 +8,7 @@ import watchList from '../assets/img/brp.png';
 import watchListPlus from '../assets/img/plus-sign-icon-free-png.webp';
 import { Tooltip } from '@mui/material';
 import { useSharedStyles } from '../common/SharedStyles';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
@@ -50,7 +50,10 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const [selectedList, setSelectedList] = useState('');
   const [isInWatchlist, setIsInWatchlist] = useState(false); // Track if movie is in watchlist
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(open, isInWatchlist);
+  if(open && isInWatchlist){
+    open && setOpen(open);
+  isInWatchlist && setIsInWatchlist(isInWatchlist);
+  }
   const dispatch = useDispatch();
   const watchlists = useSelector((state: RootState) => state.watchlist.lists);
   // Check if the movie is in any watchlist
@@ -109,7 +112,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   };
   return (
     <Box>
-      <ToastContainer position="top-center" autoClose={3000} />
+      {/* <ToastContainer position="top-center" autoClose={3000} /> */}
       <Box className={classes.cardWrapper}>
         <Box className={classes.imageMainWrapper}>
           <img className={classes.imageWrapper} src={movie.Poster} alt={movie.Title} />

@@ -2,12 +2,13 @@ body{
   margin: 0px;
   font-family: Arial, Helvetica, sans-serif;
 }
-/* .menuButton {
-  display: none;
+
+/* Apply a high z-index to the ToastContainer */
+.Toastify__toast-container {
+  z-index: 999999 !important;  /* Ensure this is high enough */
 }
 
-@media (max-width: 600px) {
-  .menuButton {
-    display: block;
-  }
-} */
+/* Optional: Customize individual toast */
+.Toastify__toast {
+  z-index: 9999999 !important; /* Ensure the toast itself is also visible */
+}

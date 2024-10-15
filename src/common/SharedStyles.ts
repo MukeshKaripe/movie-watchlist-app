@@ -28,6 +28,7 @@ export const useSharedStyles = makeStyles({
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     transition: 'transform 0.3s ease-in-out',
     overflow: 'hidden',
+    zIndex:2,
     '&:hover': {
       transform: 'translateY(-5px)',
       boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',

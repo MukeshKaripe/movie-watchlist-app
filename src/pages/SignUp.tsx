@@ -73,7 +73,9 @@ const useStyles = makeStyles({
 const SignUp = () => {
     const [credentials, setCredentials] = useState({ email: '' });
     const [combineSignin, setCombinedsignin] = useState([...defaultSignin]);
-    console.log(combineSignin);
+    if (combineSignin) {
+        combineSignin && setCombinedsignin(combineSignin)
+    }
     const [EmailError, setEmailError] = useState(credentials.email);
     const navigate = useNavigate();
     const classes = useStyles();
@@ -139,7 +141,7 @@ const SignUp = () => {
                         Signup
                     </button>
                     <Typography className={classes.linkText}>
-                        Have an account? <a href="/login" >LogIn</a>
+                        Have an account? <a href="/#/login" >LogIn</a>
                     </Typography>
                 </div>
             </div>

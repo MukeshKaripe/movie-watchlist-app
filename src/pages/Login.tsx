@@ -140,7 +140,7 @@ const LogIn = ({ setIsAuthenticated }: any) => {
                         LogIn
                     </button>
                     <Typography style={{ marginTop: '16px' }}>
-                        Don't Have an account? <a href="/signup">SignUp</a>
+                        Don't Have an account? <a href="/#/signup">SignUp</a>
                     </Typography>
                 </div>
             </Box>
