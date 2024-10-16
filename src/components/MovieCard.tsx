@@ -48,7 +48,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const [newListName, setNewListName] = useState('');
   const existingWatchlists = useSelector((state: RootState) => state.watchlist.lists);
   const [selectedList, setSelectedList] = useState('');
-  const [isInWatchlist, setIsInWatchlist] = useState(false); 
+  const [isInWatchlist, setIsInWatchlist] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const watchlists = useSelector((state: RootState) => state.watchlist.lists);
@@ -183,6 +183,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
               labelId="watchlist-label"
               value={selectedList}
               onChange={(e) => setSelectedList(e.target.value)}
+              displayEmpty
             >
               {watchlists.map((list) => (
                 <MenuItem
@@ -201,7 +202,15 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
         </DialogContent>
         <DialogActions>
           <Button sx={{ color: bgColors.gray1 }} onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddToExistingList}>Add to Selected</Button>
+          <Button  disabled={!selectedList} onClick={handleAddToExistingList}  sx={{
+          backgroundColor: selectedList ? bgColors.blue : bgColors.gray1, 
+          color: bgColors.white,
+          '&.Mui-disabled': {
+            pointerEvents: 'auto', 
+            cursor: 'not-allowed', 
+            backgroundColor: '#ddd', 
+          },
+        }} >Add to Selected</Button>
         </DialogActions>
       </Dialog>
     </Box>
