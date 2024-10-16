@@ -208,7 +208,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
           '&.Mui-disabled': {
             pointerEvents: 'auto', 
             cursor: 'not-allowed', 
-            backgroundColor: '#ddd', 
+            backgroundColor: bgColors.gray2, 
           },
         }} >Add to Selected</Button>
         </DialogActions>
