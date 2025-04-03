@@ -71,9 +71,10 @@ const useStyles = makeStyles({
 });
 
 const SignUp = () => {
-    const [credentials, setCredentials] = useState({ email: '' });
+    const [credentials, setCredentials] = useState({ email: '', password: '' });
     const [combineSignin, setCombinedsignin] = useState([...defaultSignin]);
     const [EmailError, setEmailError] = useState(credentials.email);
+    const [PasswordError, setPasswordError] = useState(credentials.password);
     const navigate = useNavigate();
     const classes = useStyles();
     const validateEmail = (email: string) => {
@@ -88,18 +89,38 @@ const SignUp = () => {
         setEmailError("");
         return true;
     };
+    const validatePassword = (password: string) => {
+        const passwordPattern =
+            /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
+            ;
+        if (password === "") {
+            setPasswordError("Password Cannot Be Empty");
+            return false;
+        }
+        else if (!passwordPattern.test(password)) {
+            setPasswordError("Please Enter a Valid Password");
+            return false;
+        }
+        setPasswordError("");
+        return true;
+    };
     const handleSignup = () => {
         const isEmailValid = validateEmail(credentials.email);
-        if (isEmailValid) {
+        const isPasswordValid = validatePassword(credentials.password);
+        if (isEmailValid && isPasswordValid) {
             setTimeout(() => {
                 toast.success('Account Created');
             }, 0);
             navigate('/login');
         }
+        else {
+            toast.error('Invalid email or password please check your credentials!');
+        }
     };
     useEffect(() => {
         if (combineSignin) {
-            setCombinedsignin([...defaultSignin]);   }
+            setCombinedsignin([...defaultSignin]);
+        }
         // Retrieve existing users from localStorage
         const storedUsersString = localStorage.getItem('loginData');
         const storedUsers = storedUsersString ? JSON.parse(storedUsersString) : [];
@@ -107,7 +128,7 @@ const SignUp = () => {
         const updatedUsers = [...storedUsers, { ...credentials, id: Date.now().toString() }];
         setCombinedsignin(updatedUsers);
         localStorage.setItem('loginData', JSON.stringify(updatedUsers));
-    }, [credentials,combineSignin]);
+    }, [credentials, combineSignin]);
     const inputProps: InputBaseProps = {
         style: {
             borderRadius: "8px",
@@ -135,6 +156,20 @@ const SignUp = () => {
                         helperText={EmailError}
                         onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
                     />
+                    <Box sx={{ mb: 3 }} >
+                        <TextField
+                            label="Password"
+                            type="Password"
+                            placeholder="Password"
+                            className={classes.input}
+                            value={credentials.password}
+                            InputProps={inputProps}
+                            InputLabelProps={labelProps}
+                            error={!!PasswordError}
+                            helperText={PasswordError}
+                            onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                        />
+                    </Box>
                     <button className={classes.button} onClick={handleSignup}>
                         Signup
                     </button>

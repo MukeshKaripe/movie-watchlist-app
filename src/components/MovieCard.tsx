@@ -10,6 +10,8 @@ import { Tooltip } from '@mui/material';
 import { useSharedStyles } from '../common/SharedStyles';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Movie } from '../services/api';
+
 
 import {
   Box,
@@ -26,13 +28,9 @@ import {
   DialogActions,
   Typography,
 } from '@mui/material';
+import MovieDetail from './MovieDetail';
 
-interface Movie {
-  imdbID: string;
-  Poster: string;
-  Title: string;
-  Year: string;
-}
+
 
 interface MovieCardProps {
   movie: Movie;
@@ -42,8 +40,12 @@ interface MovieCardProps {
 }
 
 
-const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ movie,
+  onAddToWatchlist,
+  onRemoveFromWatchlist, }) => {
   const classes = useSharedStyles();
+  const [hovered, setHovered] = useState(false);
+  const [openDetail, setOpenDetail] = useState(false);
   const [open, setOpen] = useState(false);
   const [newListName, setNewListName] = useState('');
   const existingWatchlists = useSelector((state: RootState) => state.watchlist.lists);
@@ -58,6 +60,13 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
       list.movies.some((item: { imdbID: string }) => item.imdbID === movie.imdbID)
     );
     setIsInWatchlist(isMovieInWatchlist); // Update state based on the check
+  };
+  const handleOpenDetail = () => {
+    setOpenDetail(true);
+  };
+
+  const handleCloseDetail = () => {
+    setOpenDetail(false);
   };
   const handleClickOpen = () => {
     checkIfInWatchlist(); // Check if movie is in watchlist before opening the dialog
@@ -106,6 +115,15 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
       handleClose();
     }
   };
+  const handleAddToWatchlist = (movie: Movie) => {
+    // For now, adding to the first watchlist if available
+    if (watchlists.length > 0) {
+      dispatch(addToWatchlist({
+        listId: watchlists[0].id,
+        movie
+      }));
+    }
+  };
   useEffect(() => {
     if (open && isInWatchlist) {
       open && setOpen(open);
@@ -115,7 +133,10 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   return (
     <Box>
       <Box className={classes.cardWrapper}>
-        <Box className={classes.imageMainWrapper}>
+        <Box className={classes.imageMainWrapper}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          onClick={handleOpenDetail}>
           <img className={classes.imageWrapper} src={movie.Poster} alt={movie.Title} />
         </Box>
         <Box className={classes.cardBlock}>
@@ -202,17 +223,23 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
         </DialogContent>
         <DialogActions>
           <Button sx={{ color: bgColors.gray1 }} onClick={handleClose}>Cancel</Button>
-          <Button  disabled={!selectedList} onClick={handleAddToExistingList}  sx={{
-          backgroundColor: selectedList ? bgColors.blue : bgColors.gray1, 
-          color: bgColors.white,
-          '&.Mui-disabled': {
-            pointerEvents: 'auto', 
-            cursor: 'not-allowed', 
-            backgroundColor: bgColors.gray2, 
-          },
-        }} >Add to Selected</Button>
+          <Button disabled={!selectedList} onClick={handleAddToExistingList} sx={{
+            backgroundColor: selectedList ? bgColors.blue : bgColors.gray1,
+            color: bgColors.white,
+            '&.Mui-disabled': {
+              pointerEvents: 'auto',
+              cursor: 'not-allowed',
+              backgroundColor: bgColors.gray2,
+            },
+          }} >Add to Selected</Button>
         </DialogActions>
       </Dialog>
+      <MovieDetail
+        movieId={movie.imdbID}
+        open={openDetail}
+        onClose={handleCloseDetail}
+        onAddToWatchlist={handleAddToWatchlist}
+      />
     </Box>
   );
 };

@@ -28,7 +28,7 @@ export const useSharedStyles = makeStyles({
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     transition: 'transform 0.3s ease-in-out',
     overflow: 'hidden',
-    zIndex:2,
+    zIndex: 2,
     '&:hover': {
       transform: 'translateY(-5px)',
       boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',
@@ -70,6 +70,7 @@ export const useSharedStyles = makeStyles({
   },
   imageMainWrapper: {
     height: '250px',
+    cursor: 'pointer',
   },
   editIcon: {
     paddingLeft: '7px',
@@ -83,11 +84,11 @@ export const useSharedStyles = makeStyles({
     fontSize: '13px !important',
     marginBottom: '2rem !important'
   },
-  createAdd:{
+  createAdd: {
     width: '100%',
-    padding:'10px',
-    backgroundColor:`${bgColors.blue} !important `,
+    padding: '10px',
+    backgroundColor: `${bgColors.blue} !important `,
     margin: '1rem 0px !important',
-    color:`${bgColors.white} !important `,
+    color: `${bgColors.white} !important `,
   }
 });

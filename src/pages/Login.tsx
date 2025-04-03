@@ -53,6 +53,7 @@ const LogIn = ({ setIsAuthenticated }: any) => {
     const focused = false
     const hovered = false
     const [EmailError, setEmailError] = useState(credentials.email);
+    const [PasswordError, setPasswordError] = useState(credentials.password);
     // const [error, setError] = useState("");
 
     const classes = useStyles();
@@ -71,9 +72,25 @@ const LogIn = ({ setIsAuthenticated }: any) => {
         setEmailError("");
         return true;
     };
+    const validatePassword = (password: string) => {
+        const passwordPattern =
+            /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
+            ;
+        if (password === "") {
+            setPasswordError("Password Cannot Be Empty");
+            return false;
+        }
+        else if (!passwordPattern.test(password)) {
+            setPasswordError("Please Enter a Valid Password");
+            return false;
+        }
+        setPasswordError("");
+        return true;
+    };
     const handleLogin = () => {
         const isEmailValid = validateEmail(credentials.email);
-        if (isEmailValid) {
+        const isPasswordValid = validatePassword(credentials.password);
+        if (isEmailValid && isPasswordValid) {
             let isValidUser = false;
             try {
                 for (let index = 0; index < handleDataLogin.length; index++) {
@@ -99,7 +116,7 @@ const LogIn = ({ setIsAuthenticated }: any) => {
                 toast.error('An error occurred. Please try again.');
             }
         } else {
-            toast.error('Invalid email!');
+            toast.error('Invalid email or password please check your credentials!');
         }
     };
 
@@ -134,6 +151,20 @@ const LogIn = ({ setIsAuthenticated }: any) => {
                             error={!!EmailError}
                             helperText={EmailError}
                             onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
+                        />
+                    </Box>
+                    <Box sx={{ mb: 3 }} >
+                        <TextField
+                            label="Password"
+                            type="Password"
+                            placeholder="Password"
+                            className={classes.inputField}
+                            value={credentials.password}
+                            InputProps={inputProps}
+                            InputLabelProps={labelProps}
+                            error={!!PasswordError}
+                            helperText={PasswordError}
+                            onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                         />
                     </Box>
                     <button className={classes.button} onClick={handleLogin}>

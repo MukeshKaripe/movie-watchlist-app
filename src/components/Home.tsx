@@ -1,7 +1,7 @@
 // src/components/Home.tsx
-import React, {  useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { searchMovies } from '../services/api';
+import { fetchLatestMovies, searchMovies } from '../services/api';
 import SideBar from './SideBar';
 import { makeStyles } from '@mui/styles';
 import { RootState } from '../../src/redux/store/index';
@@ -34,7 +34,7 @@ const useStyles = makeStyles({
     '@media (max-width: 767px)': {
       marginLeft: '0px',
       width: '100%',
-  },
+    },
   },
   content: {
     marginLeft: '250px',
@@ -45,7 +45,7 @@ const useStyles = makeStyles({
       width: '100%',
       padding: '20px',
       marginTop: '20px',
-  },
+    },
   },
 });
 
@@ -70,6 +70,21 @@ const Home: React.FC = () => {
       }
     }
   };
+  useEffect(() => {
+    const loadLatestMovies = async () => {
+      try {
+        dispatch(setLoading(true));
+        const results = await fetchLatestMovies();
+        dispatch(setMovies(results));
+      } catch (error) {
+        console.error('Error fetching latest movies:', error);
+      } finally {
+        dispatch(setLoading(false));
+      }
+    };
+
+    loadLatestMovies();
+  }, [dispatch]);
 
   const renderContent = () => {
     if (location.pathname === '/') {
