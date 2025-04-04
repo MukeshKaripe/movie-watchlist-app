@@ -70,7 +70,27 @@ const WatchlistView: React.FC = () => {
 
   return (
     <Box>
-      <Typography variant="h4">{watchlist.name} <FiEdit className={classes.editIcon} onClick={handleOpenDialog} /> </Typography>
+      <Typography variant="h4">{watchlist.name}
+        <Tooltip
+          title="Edit"
+          placement="top"
+          arrow
+          enterDelay={500}
+          leaveDelay={200}
+          sx={{
+            '& .MuiTooltip-tooltip': {
+              backgroundColor: 'rgba(0, 0, 0, 0.87)',
+              padding: '8px 12px',
+              fontSize: '14px',
+            },
+          }}
+        >
+          <Box display="inline-flex" alignItems="center">
+            <FiEdit className={classes.editIcon} onClick={handleOpenDialog} />
+          </Box>
+        </Tooltip>
+
+      </Typography>
       <Typography variant="h6">About this watchlist</Typography>
       <Typography className={classes.textlorep} variant="h6">This list Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolor totam hic praesentium numquam obcaecati, laudantium atque beatae quo esse dolorem consectetur debitis, placeat quibusdam culpa doloribus soluta officia asperiores sequi.</Typography>
       <Grid container spacing={2} columns={15}>
@@ -134,7 +154,7 @@ const WatchlistView: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-      <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+      <Dialog open={isDialogOpen} onClose={handleCloseDialog} sx={{ '.css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop': { background: 'unset' } }}>
         <DialogTitle>Edit Watchlist Name</DialogTitle>
         <DialogContent>
           <Input
