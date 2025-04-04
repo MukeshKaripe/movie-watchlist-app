@@ -62,18 +62,22 @@ const watchlistSlice = createSlice({
         state.error = "Watchlist not found";
       }
     },
+    deleteWatchlist: (state, action: PayloadAction<string>) => {
+      state.lists = state.lists.filter((list) => list.id !== action.payload);
+    },
     clearError: (state) => {
       state.error = null;
     },
   },
 });
 
-export const { 
-  createWatchlist, 
-  addToWatchlist, 
-  removeFromWatchlist, 
+export const {
+  createWatchlist,
+  addToWatchlist,
+  removeFromWatchlist,
   updateWatchlistName,
-  clearError
+  clearError,
+  deleteWatchlist
 } = watchlistSlice.actions;
 
 export default watchlistSlice.reducer;

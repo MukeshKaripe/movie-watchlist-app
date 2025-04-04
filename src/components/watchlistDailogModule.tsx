@@ -11,22 +11,34 @@ import {
     InputLabel,
     Select,
     MenuItem,
+    backdropClasses,
 } from "@mui/material";
+import { makeStyles } from '@mui/styles';
+
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '../../src/redux/store/index';
 import { createWatchlist, addToWatchlist } from '../../src/redux/store/watchList';
 import { Movie } from "../services/api";
 import { toast } from "react-toastify";
 
+
+const useStyles = makeStyles({
+    hrt: {
+        borderWidth: '5px'
+    }
+});
 interface WatchlistDialogProps {
     open: boolean;
     onClose: () => void;
     selectedMovie: Movie | null;
 }
 
+
 // const WatchlistDialog: React.FC<WatchlistDialogProps> = ({ open, onClose, selectedMovie })
 const WatchlistDialog: React.FC<WatchlistDialogProps> = ({ open, onClose, selectedMovie }) => {
     console.log("Selected Movie:", selectedMovie);
+    const classes = useStyles();
+
     const dispatch = useDispatch();
     const [newListName, setNewListName] = useState('');
     const existingWatchlists = useSelector((state: RootState) => state.watchlist.lists);
@@ -84,10 +96,11 @@ const WatchlistDialog: React.FC<WatchlistDialogProps> = ({ open, onClose, select
     const handleClose = () => {
         setNewListName('');
         setSelectedList('');
+        onClose();
     };
 
     return (
-        <Dialog open={open} onClose={onClose} sx={{ "& .MuiDialog-paperScrollPaper": { minWidth: { xs: "200px", md: "410px" } } }}>
+        <Dialog open={open} onClose={onClose} sx={{ "& .MuiDialog-paperScrollPaper": { minWidth: { xs: "200px", md: "410px" } }, '.css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop': { background: 'unset' } }}>
             <DialogTitle>Add to Watchlist</DialogTitle>
             <DialogContent>
                 <DialogContentText>Create a new watchlist or add to an existing one.</DialogContentText>
@@ -102,9 +115,10 @@ const WatchlistDialog: React.FC<WatchlistDialogProps> = ({ open, onClose, select
                     onChange={(e) => setNewListName(e.target.value)}
                 />
                 <Button onClick={handleCreateList}>Create & Add</Button>
-                <hr />
+                <hr className={classes.hrt} />
+
                 <FormControl fullWidth margin="normal">
-                    <InputLabel>Existing Watchlists</InputLabel>
+                    <InputLabel sx={{ background: 'white', padding: '0px 6px' }}>Existing Watchlists</InputLabel>
                     <Select value={selectedList} onChange={(e) => setSelectedList(e.target.value)} displayEmpty>
                         {watchlists.map((list) => (
                             <MenuItem key={list.id} value={list.id}>

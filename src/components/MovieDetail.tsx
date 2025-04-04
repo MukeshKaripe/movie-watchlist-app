@@ -131,6 +131,7 @@ const MovieDetail: React.FC<MovieDetailProps> = ({ movieId, open, onClose, onAdd
             onClose={onClose}
             maxWidth="md"
             fullWidth
+            sx={{ '.css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop': { background: 'unset' } }}
             PaperProps={{
                 style: {
                     borderRadius: '8px',
@@ -138,7 +139,7 @@ const MovieDetail: React.FC<MovieDetailProps> = ({ movieId, open, onClose, onAdd
                 }
             }}
         >
-            <DialogContent className={classes.dialogContent}>
+            <DialogContent className={classes.dialogContent} >
                 <IconButton
                     aria-label="close"
                     onClick={onClose}

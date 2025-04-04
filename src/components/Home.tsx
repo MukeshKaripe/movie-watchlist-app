@@ -24,14 +24,15 @@ const useStyles = makeStyles({
     height: '100vh',
     position: 'fixed',
     left: '0',
-    '@media (max-width: 767px)': {
-      // display: 'none !important'
+    '@media (max-width: 1024px)': {
+      width: '0px',
+      position: 'relative',
     }
   },
   containerwrapper: {
     marginLeft: '250px',
     width: 'calc( 100% - 250px)',
-    '@media (max-width: 767px)': {
+    '@media (max-width: 1024px)': {
       marginLeft: '0px',
       width: '100%',
     },
@@ -40,9 +41,12 @@ const useStyles = makeStyles({
     marginLeft: '250px',
     width: 'calc(100% - 250px)',
     padding: '40px',
-    '@media (max-width: 767px)': {
+    '@media (max-width: 1024px)': {
       marginLeft: '0px',
       width: '100%',
+      padding: '40px',
+    },
+    '@media (max-width: 768px)': {
       padding: '20px',
       marginTop: '20px',
     },

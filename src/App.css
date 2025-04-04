@@ -1,14 +1,24 @@
-body{
+body {
   margin: 0px;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 /* Apply a high z-index to the ToastContainer */
 .Toastify__toast-container {
-  z-index: 999999 !important;  /* Ensure this is high enough */
+  z-index: 999999 !important;
+  /* Ensure this is high enough */
 }
 
 /* Optional: Customize individual toast */
 .Toastify__toast {
-  z-index: 9999999 !important; /* Ensure the toast itself is also visible */
+  z-index: 9999999 !important;
+  /* Ensure the toast itself is also visible */
+}
+
+.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(0, 0, 0, 0.23) !important;
+}
+
+.Toastify__toast-container {
+  z-index: 999999 !important;
 }

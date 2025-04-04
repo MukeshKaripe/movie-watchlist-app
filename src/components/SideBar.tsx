@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@mui/styles';
 import { Box, Button, TextField, Theme, Tooltip } from '@mui/material';
 import { RootState } from '../../src/redux/store/index';
@@ -9,9 +9,15 @@ import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import { bgColors } from '../utils/colorTheme';
 import HomeIcon from '@mui/icons-material/Home';
+import AddIcon from '@mui/icons-material/Add';
 import UserMenu from './UserMenu';
 import { BiMoviePlay } from "react-icons/bi";
 import CloseIcon from '@mui/icons-material/Close';
+import { toast } from 'react-toastify';
+import { createWatchlist, deleteWatchlist } from '../redux/store/watchList';
+import DeleteIcon from '@mui/icons-material/Delete';
+import zIndex from '@mui/material/styles/zIndex';
+import { Padding } from '@mui/icons-material';
 
 const useStyles = makeStyles((theme: Theme) => ({
   containersidebar: {
@@ -20,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
     height: '94%',
-    '@media (max-width: 767px)': {
+    '@media (max-width: 1024px)': {
       display: 'none !important',
     },
   },
@@ -39,16 +45,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   menuButton: {
     display: 'none !important',
-    '@media (max-width: 767px)': {
+    backgroundColor: '#fff !important',
+    '@media (max-width: 1024px)': {
       display: 'block !important',
-      position: 'fixed',
+      position: 'absolute',
+      left: '40px',
+      Padding: '0px !important',
+      width: '100%'
+    },
+    '@media (max-width: 768px)': {
       left: '20px',
     },
   },
   closeMenu: {
     position: 'absolute',
     right: '20px',
-    top: '10px'
+    top: '10px',
+    cursor: 'pointer'
   },
   drawer: {
     width: '250px',
@@ -75,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '0px 10px !important',
     borderRadius: '4px',
     cursor: 'pointer',
-    marginBottom: '20px',
+    marginBottom: '15px',
   },
   movieListIcon: {
     paddingRight: '7px',
@@ -97,6 +110,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SideBar: React.FC = () => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState('');
   const watchlists = useSelector((state: RootState) => state.watchlist.lists);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -113,6 +127,36 @@ const SideBar: React.FC = () => {
   const filteredWatchlists = watchlists.filter((list) =>
     list.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  const handleCreateNewWatchlist = () => {
+    const trimmedName = searchQuery.trim();
+    if (!trimmedName) return;
+
+    const alreadyExists = watchlists.some(
+      (list) => list.name.toLowerCase() === trimmedName.toLowerCase()
+    );
+
+    if (alreadyExists) {
+      toast.error(`Watchlist "${trimmedName}" already exists`);
+      return;
+    }
+
+    const newId = Date.now().toString();
+    dispatch(createWatchlist({ id: newId, name: trimmedName }));
+
+    toast.success(`Watchlist "${trimmedName}" created`);
+    setSearchQuery('');
+  };
+  const handleDeleteList = (listed: any) => {
+    if (window.confirm(`Are you sure you want to delete "${listed.name}"?`)) {
+      dispatch(deleteWatchlist(listed.id));
+      toast.success(`"${listed.name}" has been deleted.`);
+
+      // Navigate to home after ensuring state update
+      setTimeout(() => {
+        navigate("/");
+      }, 100);
+    }
+  }
   return (
     <>
       <IconButton
@@ -139,48 +183,102 @@ const SideBar: React.FC = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 InputProps={{
                   startAdornment: <SearchIcon sx={{ color: bgColors.gray1 }} />,
+                  endAdornment: searchQuery.trim() !== '' && filteredWatchlists.length === 0 && (
+                    <Tooltip
+                      title={`Click to create new Watchlist: "${searchQuery}"`}
+                      placement="top"
+                      arrow
+                      enterDelay={500}
+                      leaveDelay={200}
+                      sx={{
+                        '& .MuiTooltip-tooltip': {
+                          backgroundColor: 'rgba(0, 0, 0, 0.87)',
+                          padding: '8px 12px',
+                          fontSize: '14px',
+                        },
+                      }}
+                    >
+                      <IconButton onClick={handleCreateNewWatchlist}>
+                        <AddIcon sx={{ color: 'primary.main' }} />
+                      </IconButton>
+                    </Tooltip>
+                  ),
                   inputProps: {
-                    style: { padding: '4px 8px' }
+                    style: { padding: '10px 8px' }
                   }
                 }}
                 className={classes.searchSidebar}
               />
             </Box>
-            <Button sx={{ mt: 3, mb: 1 }}
-              variant="contained"
-              className={classes.homeButton}
-              startIcon={<HomeIcon className={classes.homeIcon} />}
-              onClick={handleNavigateHome} >
-              Home
-            </Button>
+            <Tooltip
+              title="Go to Home Page"
+              placement="top"
+              arrow
+              enterDelay={500}
+              leaveDelay={200}
+              sx={{
+                '& .MuiTooltip-tooltip': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.87)',
+                  padding: '8px 12px',
+                  fontSize: '14px',
+                },
+              }}
+            >
+              <Button
+                sx={{ mt: 3, mb: 1 }}
+                variant="contained"
+                className={classes.homeButton}
+                startIcon={<HomeIcon className={classes.homeIcon} />}
+                onClick={handleNavigateHome}
+              >
+                Home
+              </Button>
+            </Tooltip>
             <hr />
             <Typography variant='h6' pl={2} >My Lists</Typography>
             <List className={classes.personContainerList}>
-              {filteredWatchlists.map((list) => (
-                <Tooltip
-                  title={list.name}
-                  placement="top"
-                  arrow
-                  enterDelay={500}
-                  leaveDelay={200}
-                  sx={{
-                    '& .MuiTooltip-tooltip': {
-                      backgroundColor: 'rgba(0, 0, 0, 0.87)',
-                      padding: '8px 12px',
-                      fontSize: '14px'
-                    }
-                  }}
-                  key={list.id} // Moved key here for better optimization
+              {(filteredWatchlists?.map((list) => (
+
+                <ListItem
+                  className={classes.personContainer}
+                  onClick={() => handleListClick(list.id)}
                 >
-                  <ListItem
-                    className={classes.personContainer}
-                    onClick={() => handleListClick(list.id)}
+                  <BiMoviePlay className={classes.movieListIcon} />
+                  <Tooltip
+                    title={list.name}
+                    placement="top"
+                    arrow
+                    enterDelay={500}
+                    leaveDelay={200}
+                    sx={{
+                      '& .MuiTooltip-tooltip': {
+                        backgroundColor: 'rgba(0, 0, 0, 0.87)',
+                        padding: '8px 12px',
+                        fontSize: '14px'
+                      }
+                    }}
+                    key={list.id} // Moved key here for better optimization
                   >
-                    <BiMoviePlay className={classes.movieListIcon} />
                     <ListItemText primary={list.name} className={classes.textEllipsis} />
-                  </ListItem>
-                </Tooltip>
-              ))}
+                  </Tooltip>
+                  <Tooltip
+                    title="Click to Delete Watchlist"
+                    placement="top"
+                    arrow
+                    enterDelay={500}
+                    leaveDelay={200}
+                    sx={{
+                      '& .MuiTooltip-tooltip': {
+                        backgroundColor: 'rgba(0, 0, 0, 0.87)',
+                        padding: '8px 12px',
+                        fontSize: '14px',
+                      },
+                    }}
+                  >
+                    <DeleteIcon onClick={() => handleDeleteList(list)} />
+                  </Tooltip>
+                </ListItem>
+              )))}
             </List>
           </Box>
           <Box>
@@ -201,47 +299,102 @@ const SideBar: React.FC = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               InputProps={{
                 startAdornment: <SearchIcon sx={{ color: bgColors.gray1 }} />,
+                endAdornment: searchQuery.trim() !== '' && filteredWatchlists.length === 0 && (
+                  <Tooltip
+                    title={`Click to create new Watchlist: "${searchQuery}"`}
+                    placement="top"
+                    arrow
+                    enterDelay={500}
+                    leaveDelay={200}
+                    sx={{
+                      '& .MuiTooltip-tooltip': {
+                        backgroundColor: 'rgba(0, 0, 0, 0.87)',
+                        padding: '8px 12px',
+                        fontSize: '14px',
+                      },
+                    }}
+                  >
+                    <IconButton onClick={handleCreateNewWatchlist}>
+                      <AddIcon sx={{ color: 'primary.main' }} />
+                    </IconButton>
+                  </Tooltip>
+                ),
                 inputProps: {
-                  style: { padding: '4px 8px' }
+                  style: { padding: '10px 8px' }
                 }
               }}
               className={classes.searchSidebar}
             />
           </Box>
-          <Button sx={{ mt: 3, mb: 1 }}
-            variant="contained"
-            className={classes.homeButton}
-            startIcon={<HomeIcon className={classes.homeIcon} />}
-            onClick={handleNavigateHome} >
-            Home
-          </Button>
+
+          <Tooltip
+            title="Go to Home Page"
+            placement="top"
+            arrow
+            enterDelay={500}
+            leaveDelay={200}
+            sx={{
+              '& .MuiTooltip-tooltip': {
+                backgroundColor: 'rgba(0, 0, 0, 0.87)',
+                padding: '8px 12px',
+                fontSize: '14px',
+              },
+            }}
+          >
+            <Button
+              sx={{ mt: 3, mb: 1 }}
+              variant="contained"
+              className={classes.homeButton}
+              startIcon={<HomeIcon className={classes.homeIcon} />}
+              onClick={handleNavigateHome}
+            >
+              Home
+            </Button>
+          </Tooltip>
           <hr />
           <Typography variant='h6' pl={2} >My Lists</Typography>
           <List className={classes.personContainerList}>
             {(filteredWatchlists?.map((list) => (
-              <Tooltip
-                title={list.name}
-                placement="top"
-                arrow
-                enterDelay={500}
-                leaveDelay={200}
-                sx={{
-                  '& .MuiTooltip-tooltip': {
-                    backgroundColor: 'rgba(0, 0, 0, 0.87)',
-                    padding: '8px 12px',
-                    fontSize: '14px'
-                  }
-                }}
-                key={list.id} // Moved key here for better optimization
+
+              <ListItem
+                className={classes.personContainer}
+                onClick={() => handleListClick(list.id)}
               >
-                <ListItem
-                  className={classes.personContainer}
-                  onClick={() => handleListClick(list.id)}
+                <BiMoviePlay className={classes.movieListIcon} />
+                <Tooltip
+                  title={list.name}
+                  placement="top"
+                  arrow
+                  enterDelay={500}
+                  leaveDelay={200}
+                  sx={{
+                    '& .MuiTooltip-tooltip': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.87)',
+                      padding: '8px 12px',
+                      fontSize: '14px'
+                    }
+                  }}
+                  key={list.id} // Moved key here for better optimization
                 >
-                  <BiMoviePlay className={classes.movieListIcon} />
                   <ListItemText primary={list.name} className={classes.textEllipsis} />
-                </ListItem>
-              </Tooltip>
+                </Tooltip>
+                <Tooltip
+                  title="Click to Delete Watchlist"
+                  placement="top"
+                  arrow
+                  enterDelay={500}
+                  leaveDelay={200}
+                  sx={{
+                    '& .MuiTooltip-tooltip': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.87)',
+                      padding: '8px 12px',
+                      fontSize: '14px',
+                    },
+                  }}
+                >
+                  <DeleteIcon onClick={() => handleDeleteList(list)} />
+                </Tooltip>
+              </ListItem>
             )))}
           </List>
         </Box>

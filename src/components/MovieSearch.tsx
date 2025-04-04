@@ -26,7 +26,7 @@ const useStyles = makeStyles({
     display: 'flex',
     '@media (max-width: 768px)': {
       flexWrap: 'wrap !important',
-  },
+    },
   },
   containerWrapper: {
     padding: '10px',
@@ -48,9 +48,9 @@ const useStyles = makeStyles({
     backgroundColor: `${bgColors.red1} !important`,
     padding: '8px 16px !important'
   },
-  sadEmoji:{
-    width:'50px !important',
-    height:'50px !important',
+  sadEmoji: {
+    width: '50px !important',
+    height: '50px !important',
     fill: `${bgColors.red1} !important`,
     paddingTop: '20px',
     marginBottom: '-17px'
@@ -65,7 +65,7 @@ const MovieSearch: React.FC<MovieSearchProps> = ({
   movies,
 }) => {
   const classes = useStyles();
-  
+
   return (
     <Box>
       <Box className={classes.containerWrapper} sx={{ marginBottom: { xs: "10px", sm: "20px", md: "30px", lg: "40px" } }} >
@@ -82,13 +82,16 @@ const MovieSearch: React.FC<MovieSearchProps> = ({
           InputProps={{
             startAdornment: <SearchIcon />,
             inputProps: {
-              style: {padding: '10px 100px 10px 16px'}
+              style: { padding: '10px 100px 10px 16px' }
             }
           }}
           sx={{
             '& .MuiOutlinedInput-root': {
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'transparent', // or same as background to visually hide
+              },
               '&.Mui-focused fieldset': {
-                borderColor: `${bgColors.red1}`
+                borderColor: `${bgColors.red1}`,
               },
             },
           }}
@@ -111,7 +114,7 @@ const MovieSearch: React.FC<MovieSearchProps> = ({
         </Box>
       ) : (
         <Grid container spacing={2} columns={15} >
-          {movies.map((movie) => (
+          {movies.filter((movie) => movie.Poster && movie.Poster !== "N/A").map((movie) => (
             <Grid item xs={12} sm={6} md={3} key={movie.imdbID}>
               <MovieCard movie={movie} isInWatchlist={false} onAddToWatchlist={function (): void {
                 throw new Error('Function not implemented.');

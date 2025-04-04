@@ -10,6 +10,7 @@ import AddReactionIcon from '@mui/icons-material/AddReaction';
 import { FaCheck } from "react-icons/fa";
 import { bgColors } from '../utils/colorTheme';
 import { FaMinusCircle } from "react-icons/fa";
+import MovieDetail from './MovieDetail';
 
 const WatchlistView: React.FC = () => {
   const classes = useSharedStyles();
@@ -19,11 +20,12 @@ const WatchlistView: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newName, setNewName] = useState('');
   const dispatch = useDispatch();
+  const [openDetail, setOpenDetail] = useState(false);
   const watchlist = useSelector((state: RootState) =>
     state.watchlist.lists.find(list => list.id === listId)
   );
-  const methodImplement= ()=>{
-    console.log(setIsWatched,hovered);
+  const methodImplement = () => {
+    console.log(setIsWatched, hovered);
   }
   React.useEffect(() => {
     if (watchlist) {
@@ -47,6 +49,13 @@ const WatchlistView: React.FC = () => {
       methodImplement()
     }
   };
+  const handleOpenDetail = () => {
+    setOpenDetail(true);
+  };
+
+  const handleCloseDetail = () => {
+    setOpenDetail(false);
+  };
   const handleRemoveMovie = (movieId: string) => {
     if (listId) {
       dispatch(removeFromWatchlist({ listId, movieId }));
@@ -58,6 +67,7 @@ const WatchlistView: React.FC = () => {
   const handleWatchedToggle = (movieId: String) => {
     isWatched.push(movieId);
   };
+
   return (
     <Box>
       <Typography variant="h4">{watchlist.name} <FiEdit className={classes.editIcon} onClick={handleOpenDialog} /> </Typography>
@@ -68,7 +78,10 @@ const WatchlistView: React.FC = () => {
           <Grid item xs={12} sm={6} md={3} key={movie.imdbID}>
             <Box className={classes.cardWrapper} onMouseEnter={() => setHovered(true)}
               onMouseLeave={() => setHovered(false)}>
-              <Box className={classes.imageMainWrapper}>
+              <Box className={classes.imageMainWrapper}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+                onClick={handleOpenDetail}>
                 <img className={classes.imageWrapper} src={movie.Poster} alt={movie.Title} />
               </Box>
               <Box className={classes.cardBlock}>
@@ -113,6 +126,11 @@ const WatchlistView: React.FC = () => {
                 </Tooltip>
               </Box>
             </Box>
+            <MovieDetail
+              movieId={movie.imdbID}
+              open={openDetail}
+              onClose={handleCloseDetail}
+            />
           </Grid>
         ))}
       </Grid>
@@ -130,6 +148,7 @@ const WatchlistView: React.FC = () => {
           <Button onClick={handleUpdateName}>Update</Button>
         </DialogActions>
       </Dialog>
+
     </Box>
   );
 };
