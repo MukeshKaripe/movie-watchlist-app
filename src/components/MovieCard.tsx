@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../src/redux/store/index';
-import { createWatchlist, addToWatchlist } from '../../src/redux/store/watchList';
-import { bgColors } from '../utils/colorTheme';
+import { addToWatchlist } from '../../src/redux/store/watchList';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import watchList from '../assets/img/brp.png';
 import watchListPlus from '../assets/img/plus-sign-icon-free-png.webp';
 import { Tooltip } from '@mui/material';
 import { useSharedStyles } from '../common/SharedStyles';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Movie } from '../services/api';
-
-
 import {
   Box,
   Typography,
@@ -33,10 +29,10 @@ interface MovieCardProps {
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const classes = useSharedStyles();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [hovered, setHovered] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
   const [open, setOpen] = useState(false);
-  const existingWatchlists = useSelector((state: RootState) => state.watchlist.lists);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();

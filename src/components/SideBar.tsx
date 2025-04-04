@@ -16,8 +16,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { toast } from 'react-toastify';
 import { createWatchlist, deleteWatchlist } from '../redux/store/watchList';
 import DeleteIcon from '@mui/icons-material/Delete';
-import zIndex from '@mui/material/styles/zIndex';
-import { Padding } from '@mui/icons-material';
 
 const useStyles = makeStyles((theme: Theme) => ({
   containersidebar: {

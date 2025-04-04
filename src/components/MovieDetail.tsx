@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Grid, Button, CircularProgress, Dialog, DialogContent, DialogActions, IconButton } from '@mui/material';
+import { Box, Typography, Grid, Button, CircularProgress, Dialog, DialogContent, IconButton } from '@mui/material';
 import { getMovieDetails, Movie } from '../services/api';
 import { makeStyles } from '@mui/styles';
 import { bgColors } from '../utils/colorTheme';
@@ -7,8 +7,6 @@ import AddReactionIcon from '@mui/icons-material/AddReaction';
 import watchList from '../assets/img/bookmark.png';
 import CloseIcon from "@mui/icons-material/Close";
 import WatchlistDialog from './watchlistDailogModule';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
 
 const useStyles = makeStyles({
     dialogContent: {
@@ -90,7 +88,6 @@ const MovieDetail: React.FC<MovieDetailProps> = ({ movieId, open, onClose, onAdd
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>('');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const selectedMovie = useSelector((state: RootState) => state.movies.selectedMovie);
     const [selectedMovieDetails, setSelectedMovieDetails] = useState<Movie | null>(null);
 
     useEffect(() => {
