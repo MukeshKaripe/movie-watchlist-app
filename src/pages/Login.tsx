@@ -146,6 +146,7 @@ const LogIn = ({ setIsAuthenticated }: any) => {
                             placeholder="Email"
                             className={classes.inputField}
                             value={credentials.email}
+                            autoComplete="username"
                             InputProps={inputProps}
                             InputLabelProps={labelProps}
                             error={!!EmailError}
@@ -163,6 +164,7 @@ const LogIn = ({ setIsAuthenticated }: any) => {
                             InputProps={inputProps}
                             InputLabelProps={labelProps}
                             error={!!PasswordError}
+                            autoComplete="current-password"
                             helperText={PasswordError}
                             onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                         />

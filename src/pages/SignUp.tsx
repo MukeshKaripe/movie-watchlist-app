@@ -98,7 +98,7 @@ const SignUp = () => {
             return false;
         }
         else if (!passwordPattern.test(password)) {
-            setPasswordError("Please Enter a Valid Password");
+            setPasswordError("Please Enter a Valid Password minimum 8 characters with combination of letters in upper and lowercase digits and special character");
             return false;
         }
         setPasswordError("");
