@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
 import { bgColors } from '../utils/colorTheme';
@@ -101,6 +101,7 @@ const LogIn = ({ setIsAuthenticated }: any) => {
                     if (credentials.email === element.email) {
                         setIsAuthenticated(true);
                         localStorage.setItem('isAuthenticated', 'true');
+                        localStorage.setItem('loggedInUser', JSON.stringify(element));
                         isValidUser = true;
                         setTimeout(() => {
                             toast.success('Login successful!');
@@ -137,11 +138,20 @@ const LogIn = ({ setIsAuthenticated }: any) => {
     const labelProps: InputLabelProps = {
         style: { fontSize: 14 },
     };
+    useEffect(() => {
+        const isAuthenticated = localStorage.getItem('isAuthenticated');
+        if (isAuthenticated === 'true') {
+            toast.error('Oops! Please login again');
+            // Clear localStorage (auto logout)
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('loggedInUser');
+        }
+    }, []);
     return (
         <Box className={classes.containerMainWrapper} >
             <Box className={classes.container} sx={{ width: { xs: '300px', md: '500px' }, margin: 'auto', textAlign: 'center' }}>
                 <div style={{ width: '300px', margin: 'auto', textAlign: 'center' }}>
-                    <h4>LogIn</h4>
+                    <h4 style={{ marginTop: '0px' }}>LogIn</h4>
                     <Box sx={{ mb: 3 }} >
                         <TextField
                             label="Email"
@@ -153,10 +163,7 @@ const LogIn = ({ setIsAuthenticated }: any) => {
                             InputProps={{
                                 ...inputProps,
                                 sx: {
-                                    height: '56px',
                                     borderRadius: '8px',
-                                    fontSize: '14px',
-                                    backgroundColor: '#fff',
                                 },
                             }}
                             InputLabelProps={labelProps}
@@ -201,11 +208,7 @@ const LogIn = ({ setIsAuthenticated }: any) => {
                                             </Tooltip>
                                         </IconButton>
                                     </InputAdornment>
-                                ),
-                                sx: {
-                                    borderRadius: '8px',
-                                    fontSize: '14px',
-                                },
+                                )
                             }}
                         />
                     </Box>

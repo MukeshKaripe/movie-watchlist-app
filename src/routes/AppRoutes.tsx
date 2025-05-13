@@ -21,8 +21,12 @@ const AppRoutes: React.FC = () => {
     }
   }, []);
 
-  const PrivateRoute = ({ children, isAuthenticated }: PrivateRouteProps) => {
-    return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
+  // const PrivateRoute = ({ children, isAuthenticated }: PrivateRouteProps) => {
+  //   return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
+  // };
+  const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    return isAuthenticated ? children : <Navigate to="/login" replace />;
   };
 
   return (
@@ -32,7 +36,7 @@ const AppRoutes: React.FC = () => {
           <Route
             path="/*"
             element={
-              <PrivateRoute isAuthenticated={isAuthenticated}>
+              <PrivateRoute>
                 <Home />
               </PrivateRoute>
             }

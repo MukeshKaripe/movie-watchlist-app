@@ -74,16 +74,41 @@ const useStyles = makeStyles({
 });
 
 const SignUp = () => {
-    const [credentials, setCredentials] = useState({ email: '', password: '', confirmPassword: '' });
+    const [credentials, setCredentials] = useState({ name: '', email: '', password: '', confirmPassword: '' });
     const [combineSignin, setCombinedsignin] = useState([...defaultSignin]);
     const [EmailError, setEmailError] = useState(credentials.email);
     const [PasswordError, setPasswordError] = useState(credentials.password);
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
     const [showPassword, SetshowPassword] = useState(false);
     const [showConfirmPassword, SetshowConfirmPassword] = useState(false);
+    const [nameError, setNameError] = useState('');
 
     const navigate = useNavigate();
     const classes = useStyles();
+    const validateName = (name: string) => {
+        const trimmedName = name.trim();
+
+        // Allow only letters and spaces (you can include hyphens/apostrophes if needed)
+        const namePattern = /^[a-zA-Z\s]+$/;
+
+        if (!trimmedName) {
+            setNameError('Name is required');
+            toast.error('Name is required');
+            return false;
+        } else if (trimmedName.length < 2) {
+            setNameError('Name must be at least 2 characters');
+            toast.error('Name must be at least 2 characters');
+            return false;
+        } else if (!namePattern.test(trimmedName)) {
+            setNameError('Name should not contain special characters or numbers');
+            toast.error('Name should not contain special characters or numbers');
+            return false;
+        }
+
+        setNameError('');
+        return true;
+    };
+
     const validateEmail = (email: string) => {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (email === "") {
@@ -112,10 +137,11 @@ const SignUp = () => {
         return true;
     };
     const handleSignup = () => {
+        const isNameValid = validateName(credentials.name);
         const isEmailValid = validateEmail(credentials.email);
         const isPasswordValid = validatePassword(credentials.password);
         const isConfirmPasswordValid = validateConfirmPassword(credentials.confirmPassword);
-        if (isEmailValid && isPasswordValid && isConfirmPasswordValid) {
+        if (isNameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid) {
             setTimeout(() => {
                 toast.success('Account Created');
             }, 0);
@@ -148,7 +174,15 @@ const SignUp = () => {
         const updatedUsers = [...storedUsers, { ...credentials, id: Date.now().toString() }];
         setCombinedsignin(updatedUsers);
         localStorage.setItem('loginData', JSON.stringify(updatedUsers));
+        const isAuthenticated = localStorage.getItem('isAuthenticated');
+        if (isAuthenticated === 'true') {
+            // Clear localStorage (auto logout)
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('loggedInUser');
+            toast.error('Oops! Please login again');
+        }
     }, [credentials, combineSignin]);
+
     const inputProps: InputBaseProps = {
         style: {
             borderRadius: "8px",
@@ -163,13 +197,14 @@ const SignUp = () => {
         <Box className={classes.containerMainWrapper} >
             <div className={classes.container}>
                 <div className={classes.form}>
-                    <h4>SignUp</h4>
-                    <TextField sx={{ mb: 3 }}
-                        label="Email"
+                    <h4 style={{ marginTop: '0px' }}>SignUp</h4>
+                    <TextField
+                        sx={{ mb: 3 }}
+                        label="Name"
                         type="text"
-                        placeholder="Email"
+                        placeholder="Enter your name"
                         className={classes.input}
-                        value={credentials.email}
+                        value={credentials.name}
                         InputProps={{
                             ...inputProps,
                             sx: {
@@ -178,6 +213,21 @@ const SignUp = () => {
                                 fontSize: '14px',
                                 backgroundColor: '#fff',
                             },
+                        }}
+                        InputLabelProps={labelProps}
+                        error={!!nameError}
+                        helperText={nameError}
+                        onChange={(e) => setCredentials({ ...credentials, name: e.target.value })}
+                    />
+
+                    <TextField sx={{ mb: 3 }}
+                        label="Email"
+                        type="text"
+                        placeholder="Email"
+                        className={classes.input}
+                        value={credentials.email}
+                        InputProps={{
+                            ...inputProps,
                         }}
                         InputLabelProps={labelProps}
                         error={!!EmailError}
@@ -214,11 +264,7 @@ const SignUp = () => {
                                             </Tooltip>
                                         </IconButton>
                                     </InputAdornment>
-                                ),
-                                sx: {
-                                    borderRadius: '8px',
-                                    fontSize: '14px',
-                                },
+                                )
                             }}
                             InputLabelProps={labelProps}
                             error={!!PasswordError}
@@ -256,11 +302,7 @@ const SignUp = () => {
                                             </Tooltip>
                                         </IconButton>
                                     </InputAdornment>
-                                ),
-                                sx: {
-                                    borderRadius: '8px',
-                                    fontSize: '14px',
-                                },
+                                )
                             }}
                             InputLabelProps={labelProps}
                             error={!!confirmPasswordError}

@@ -11,6 +11,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import WatchlistView from './WatchListView';
 import MovieSearch from './MovieSearch';
 import { ThemeProvider, createTheme } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -60,7 +61,7 @@ const Home: React.FC = () => {
   const movies = useSelector((state: RootState) => state.movies.movies);
   const loading = useSelector((state: RootState) => state.movies.loading);
   const [query, setQuery] = useState('');
-
+  const navigate = useNavigate();
   const handleSearch = async () => {
     if (query.trim()) {
       try {
@@ -75,6 +76,11 @@ const Home: React.FC = () => {
     }
   };
   useEffect(() => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+
+    if (!isAuthenticated) {
+      navigate('/login', { replace: true });
+    }
     const loadLatestMovies = async () => {
       try {
         dispatch(setLoading(true));
