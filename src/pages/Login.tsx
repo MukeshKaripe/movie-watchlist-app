@@ -8,6 +8,7 @@ import { Box, IconButton, InputAdornment, InputBaseProps, InputLabelProps, TextF
 import backgroundImage from '../assets/img/new-pwd-bg.png';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Tooltip } from '@mui/material';
 
 const useStyles = makeStyles({
     containerMainWrapper: {
@@ -182,7 +183,22 @@ const LogIn = ({ setIsAuthenticated }: any) => {
                                 endAdornment: (
                                     <InputAdornment position="end">
                                         <IconButton onClick={() => SetshowPassword(!showPassword)} edge="end">
-                                            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                            <Tooltip
+                                                title={showPassword ? 'Hide Password' : 'Show Password'}
+                                                placement="top"
+                                                arrow
+                                                enterDelay={300}
+                                                leaveDelay={150}
+                                                sx={{
+                                                    '& .MuiTooltip-tooltip': {
+                                                        backgroundColor: 'rgba(0, 0, 0, 0.87)',
+                                                        padding: '6px 10px',
+                                                        fontSize: '13px'
+                                                    }
+                                                }}
+                                            >
+                                                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                            </Tooltip>
                                         </IconButton>
                                     </InputAdornment>
                                 ),

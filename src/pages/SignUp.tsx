@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Tooltip } from '@mui/material';
 
 const defaultSignin = [{
     id: '1',
@@ -195,7 +196,22 @@ const SignUp = () => {
                                 endAdornment: (
                                     <InputAdornment position="end">
                                         <IconButton onClick={() => SetshowPassword(!showPassword)} edge="end">
-                                            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                            <Tooltip
+                                                title={showPassword ? 'Hide Password' : 'Show Password'}
+                                                placement="top"
+                                                arrow
+                                                enterDelay={300}
+                                                leaveDelay={150}
+                                                sx={{
+                                                    '& .MuiTooltip-tooltip': {
+                                                        backgroundColor: 'rgba(0, 0, 0, 0.87)',
+                                                        padding: '6px 10px',
+                                                        fontSize: '13px'
+                                                    }
+                                                }}
+                                            >
+                                                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                            </Tooltip>
                                         </IconButton>
                                     </InputAdornment>
                                 ),
@@ -222,7 +238,22 @@ const SignUp = () => {
                                 endAdornment: (
                                     <InputAdornment position="end">
                                         <IconButton onClick={() => SetshowConfirmPassword(!showConfirmPassword)} edge="end">
-                                            {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                            <Tooltip
+                                                title={showConfirmPassword ? 'Hide Confirm Password' : 'Show Confirm Password'}
+                                                placement="top"
+                                                arrow
+                                                enterDelay={300}
+                                                leaveDelay={150}
+                                                sx={{
+                                                    '& .MuiTooltip-tooltip': {
+                                                        backgroundColor: 'rgba(0, 0, 0, 0.87)',
+                                                        padding: '6px 10px',
+                                                        fontSize: '13px'
+                                                    }
+                                                }}
+                                            >
+                                                {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                            </Tooltip>
                                         </IconButton>
                                     </InputAdornment>
                                 ),
