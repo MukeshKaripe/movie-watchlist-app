@@ -4,8 +4,10 @@ import { makeStyles } from '@mui/styles';
 import { bgColors } from '../utils/colorTheme';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Box, InputBaseProps, InputLabelProps, TextField, Typography } from '@mui/material';
+import { Box, IconButton, InputAdornment, InputBaseProps, InputLabelProps, TextField, Typography } from '@mui/material';
 import backgroundImage from '../assets/img/new-pwd-bg.png';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const useStyles = makeStyles({
     containerMainWrapper: {
@@ -33,7 +35,7 @@ const useStyles = makeStyles({
     },
     inputField: {
         width: "100%",
-        borderRadius: "4px",
+        borderRadius: "8px",
     },
     button: {
         backgroundColor: bgColors.green,
@@ -54,7 +56,7 @@ const LogIn = ({ setIsAuthenticated }: any) => {
     const hovered = false
     const [EmailError, setEmailError] = useState(credentials.email);
     const [PasswordError, setPasswordError] = useState(credentials.password);
-    // const [error, setError] = useState("");
+    const [showPassword, SetshowPassword] = useState(false);
 
     const classes = useStyles();
     const navigate = useNavigate();
@@ -147,7 +149,15 @@ const LogIn = ({ setIsAuthenticated }: any) => {
                             className={classes.inputField}
                             value={credentials.email}
                             autoComplete="username"
-                            InputProps={inputProps}
+                            InputProps={{
+                                ...inputProps,
+                                sx: {
+                                    height: '56px',
+                                    borderRadius: '8px',
+                                    fontSize: '14px',
+                                    backgroundColor: '#fff',
+                                },
+                            }}
                             InputLabelProps={labelProps}
                             error={!!EmailError}
                             helperText={EmailError}
@@ -157,23 +167,37 @@ const LogIn = ({ setIsAuthenticated }: any) => {
                     <Box sx={{ mb: 3 }} >
                         <TextField
                             label="Password"
-                            type="Password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="Password"
-                            className={classes.inputField}
                             value={credentials.password}
-                            InputProps={inputProps}
-                            InputLabelProps={labelProps}
+                            className={classes.inputField}
                             error={!!PasswordError}
                             autoComplete="current-password"
                             helperText={PasswordError}
-                            onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                            onChange={(e) =>
+                                setCredentials({ ...credentials, password: e.target.value })
+                            }
+                            InputProps={{
+                                ...inputProps,
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={() => SetshowPassword(!showPassword)} edge="end">
+                                            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                                sx: {
+                                    borderRadius: '8px',
+                                    fontSize: '14px',
+                                },
+                            }}
                         />
                     </Box>
                     <button className={classes.button} onClick={handleLogin}>
-                        LogIn
+                        Log In
                     </button>
                     <Typography style={{ marginTop: '16px' }}>
-                        Don't Have an account? <a href="/#/signup">SignUp</a>
+                        Don't have an account? <a href="/#/signup">Sign Up</a>
                     </Typography>
                 </div>
             </Box>

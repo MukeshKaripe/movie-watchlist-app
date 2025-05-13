@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/img/new-pwd-bg.png';
-import { Box, InputBaseProps, InputLabelProps, TextField, Typography } from '@mui/material';
+import { Box, IconButton, InputAdornment, InputBaseProps, InputLabelProps, TextField, Typography } from '@mui/material';
 import { bgColors } from '../utils/colorTheme';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const defaultSignin = [{
     id: '1',
@@ -71,10 +73,14 @@ const useStyles = makeStyles({
 });
 
 const SignUp = () => {
-    const [credentials, setCredentials] = useState({ email: '', password: '' });
+    const [credentials, setCredentials] = useState({ email: '', password: '', confirmPassword: '' });
     const [combineSignin, setCombinedsignin] = useState([...defaultSignin]);
     const [EmailError, setEmailError] = useState(credentials.email);
     const [PasswordError, setPasswordError] = useState(credentials.password);
+    const [confirmPasswordError, setConfirmPasswordError] = useState('');
+    const [showPassword, SetshowPassword] = useState(false);
+    const [showConfirmPassword, SetshowConfirmPassword] = useState(false);
+
     const navigate = useNavigate();
     const classes = useStyles();
     const validateEmail = (email: string) => {
@@ -107,7 +113,8 @@ const SignUp = () => {
     const handleSignup = () => {
         const isEmailValid = validateEmail(credentials.email);
         const isPasswordValid = validatePassword(credentials.password);
-        if (isEmailValid && isPasswordValid) {
+        const isConfirmPasswordValid = validateConfirmPassword(credentials.confirmPassword);
+        if (isEmailValid && isPasswordValid && isConfirmPasswordValid) {
             setTimeout(() => {
                 toast.success('Account Created');
             }, 0);
@@ -117,6 +124,18 @@ const SignUp = () => {
             toast.error('Invalid email or password please check your credentials!');
         }
     };
+    const validateConfirmPassword = (confirmPassword: string) => {
+        if (confirmPassword === "") {
+            setConfirmPasswordError("Confirm Password Cannot Be Empty");
+            return false;
+        } else if (confirmPassword !== credentials.password) {
+            setConfirmPasswordError("Passwords do not match");
+            return false;
+        }
+        setConfirmPasswordError("");
+        return true;
+    };
+
     useEffect(() => {
         if (combineSignin) {
             setCombinedsignin([...defaultSignin]);
@@ -150,7 +169,15 @@ const SignUp = () => {
                         placeholder="Email"
                         className={classes.input}
                         value={credentials.email}
-                        InputProps={inputProps}
+                        InputProps={{
+                            ...inputProps,
+                            sx: {
+                                height: '56px',
+                                borderRadius: '8px',
+                                fontSize: '14px',
+                                backgroundColor: '#fff',
+                            },
+                        }}
                         InputLabelProps={labelProps}
                         error={!!EmailError}
                         helperText={EmailError}
@@ -159,22 +186,65 @@ const SignUp = () => {
                     <Box sx={{ mb: 3 }} >
                         <TextField
                             label="Password"
-                            type="Password"
+                            type={showPassword ? 'text' : 'password'}
                             placeholder="Password"
                             className={classes.input}
                             value={credentials.password}
-                            InputProps={inputProps}
+                            InputProps={{
+                                ...inputProps,
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={() => SetshowPassword(!showPassword)} edge="end">
+                                            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                                sx: {
+                                    borderRadius: '8px',
+                                    fontSize: '14px',
+                                },
+                            }}
                             InputLabelProps={labelProps}
                             error={!!PasswordError}
                             helperText={PasswordError}
                             onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                         />
                     </Box>
+                    <Box sx={{ mb: 3 }} >
+                        <TextField
+                            label="Confirm Password"
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            placeholder="Confirm Password"
+                            className={classes.input}
+                            value={credentials.confirmPassword}
+                            InputProps={{
+                                ...inputProps,
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={() => SetshowConfirmPassword(!showConfirmPassword)} edge="end">
+                                            {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                                sx: {
+                                    borderRadius: '8px',
+                                    fontSize: '14px',
+                                },
+                            }}
+                            InputLabelProps={labelProps}
+                            error={!!confirmPasswordError}
+                            helperText={confirmPasswordError}
+                            onChange={(e) =>
+                                setCredentials({ ...credentials, confirmPassword: e.target.value })
+                            }
+                        />
+                    </Box>
+
                     <button className={classes.button} onClick={handleSignup}>
-                        Signup
+                        Sign Up
                     </button>
                     <Typography className={classes.linkText}>
-                        Have an account? <a href="/#/login" >LogIn</a>
+                        Already have an account? <a href="/#/login" >Log In</a>
                     </Typography>
                 </div>
             </div>
