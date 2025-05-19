@@ -94,7 +94,7 @@ const Home: React.FC = () => {
     };
 
     loadLatestMovies();
-  }, [dispatch]);
+  }, [dispatch, navigate]);
 
   const renderContent = () => {
     if (location.pathname === '/') {
