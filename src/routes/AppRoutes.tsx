@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Changed to HashRouter
 import { ToastContainer } from 'react-toastify'; // Import here
 import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for Toast
@@ -6,12 +6,13 @@ import Home from '../components/Home';
 import Signup from '../pages/SignUp';
 import LogIn from '../pages/Login';
 
-interface PrivateRouteProps {
-  children: ReactNode;
-  isAuthenticated: boolean;
-}
+// interface PrivateRouteProps {
+//   children: ReactNode;
+//   isAuthenticated: boolean;
+// }
 
 const AppRoutes: React.FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
