@@ -7,7 +7,7 @@ import AddReactionIcon from '@mui/icons-material/AddReaction';
 import watchList from '../assets/img/bookmark.png';
 import CloseIcon from "@mui/icons-material/Close";
 import WatchlistDialog from './watchlistDailogModule';
-
+import watchListPlus from '../assets/img/plus-sign-icon-free-png.webp';
 const useStyles = makeStyles({
     dialogContent: {
         padding: '20px !important',
@@ -28,6 +28,11 @@ const useStyles = makeStyles({
         fontWeight: 'bold !important',
         marginBottom: '8px !important',
         width: '85% !important',
+    }, actionsIconSub: {
+        position: 'absolute',
+        top: '10px',
+        left: '16px',
+        cursor: 'pointer'
     },
     year: {
         color: '#666 !important',
@@ -226,7 +231,9 @@ const MovieDetail: React.FC<MovieDetailProps> = ({ movieId, open, onClose, onAdd
                                     onClick={handleAddToWatchlist}
                                     startIcon={<img width={20} height={20} src={watchList} alt='Bookmark' />}
                                 >
-                                    Add to Watchlist
+                                    Add to Watchlist <img className={classes.actionsIconSub} width={12} height={12}
+                                        src={watchListPlus}
+                                        alt={"Add to Watchlist"} />
                                 </Button>
                             )}
                             <WatchlistDialog open={isModalOpen} onClose={() => setIsModalOpen(false)} selectedMovie={selectedMovieDetails} />

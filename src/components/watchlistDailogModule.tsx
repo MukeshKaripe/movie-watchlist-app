@@ -115,7 +115,6 @@ const WatchlistDialog: React.FC<WatchlistDialogProps> = ({ open, onClose, select
                 />
                 <Button onClick={handleCreateList}>Create & Add</Button>
                 <hr className={classes.hrt} />
-
                 <FormControl fullWidth margin="normal">
                     <InputLabel sx={{ background: 'white', padding: '0px 6px' }}>Existing Watchlists</InputLabel>
                     <Select value={selectedList} onChange={(e) => setSelectedList(e.target.value)} displayEmpty>

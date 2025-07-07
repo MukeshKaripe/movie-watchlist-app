@@ -79,6 +79,11 @@ const MovieSearch: React.FC<MovieSearchProps> = ({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for movies..."
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSearch();
+            }
+          }}
           InputProps={{
             startAdornment: <SearchIcon />,
             inputProps: {
